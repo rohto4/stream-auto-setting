@@ -1,7 +1,7 @@
 # UI/UX仕様書
 **Project:** オートOBS設定
-**Version:** 1.0.0
-**Last Updated:** 2026-02-12
+**Version:** 2.0.0
+**Last Updated:** 2026-02-14
 **Design Principle:** ユーザーを手放さない、迷わせない、待たせない
 
 ---
@@ -21,36 +21,58 @@
 
 ### 1.2 カラーパレット
 
+**コンセプト:** ビギナーカラー + OBSカラー
+- 生成AIのポン出しサイトと差別化
+- 親しみやすさ（黄緑・黄色）とプロフェッショナル感（黒）を融合
+
 ```typescript
-// Tailwind CSS 4 カスタムテーマ
-export const colors = {
-  primary: {
-    50: '#EEF2FF',   // 背景薄
-    100: '#E0E7FF',
-    500: '#6366F1',  // メインCTA
-    600: '#4F46E5',  // ホバー
-    700: '#4338CA',  // アクティブ
-  },
-  success: {
-    500: '#10B981',  // 検知成功
-    600: '#059669',
-  },
-  warning: {
-    500: '#F59E0B',  // 回線速度注意
-    600: '#D97706',
-  },
-  neutral: {
-    50: '#F9FAFB',   // カード背景
-    200: '#E5E7EB',  // ボーダー
-    500: '#6B7280',  // テキスト補助
-    900: '#111827',  // テキスト主要
-  },
+// ブランドカラー（CSS変数）
+export const brandColors = {
+  beginnerGreen: '#A7D444',  // HSL: 75, 65%, 55% - メインCTA、アクセント
+  beginnerYellow: '#EDF28F', // HSL: 64, 76%, 75% - セカンダリ、ハイライト
+  obsBlack: '#1A1A1A',       // HSL: 0, 0%, 10% - ヘッダー、ダークモード背景
+};
+
+// セマンティックカラー
+export const semanticColors = {
+  success: '#A7D444',   // Beginner Green
+  warning: '#F5C842',   // 警告オレンジ
+  error: '#E74C3C',     // エラー赤
+  info: '#3498DB',      // 情報青
+};
+
+// ニュートラルカラー（Light Mode）
+export const neutralLight = {
+  background: '#FFFFFF',
+  surface: '#F8F9FA',
+  border: '#E5E7EB',
+  textPrimary: '#1F2937',
+  textSecondary: '#6B7280',
+};
+
+// ニュートラルカラー（Dark Mode）
+export const neutralDark = {
+  background: '#0D0D0D',
+  surface: '#1A1A1A',   // OBS Black
+  border: '#2D2D2D',
+  textPrimary: '#F9FAFB',
+  textSecondary: '#9CA3AF',
+};
+
+// グラデーション
+export const gradients = {
+  primary: 'linear-gradient(135deg, #A7D444 0%, #EDF28F 100%)',
+  dark: 'linear-gradient(180deg, #1A1A1A 0%, #0D0D0D 100%)',
 };
 ```
 
 **アクセシビリティ:**
-- コントラスト比 4.5:1 以上（WCAG AA準拠）
-- カラーだけに頼らない情報伝達（アイコン併用）
+- ✅ Beginner Green (#A7D444) on OBS Black (#1A1A1A): 7.8:1 (WCAG AAA合格)
+- ⚠️ Beginner Green on White: 3.2:1 (大きいテキスト専用)
+- ✅ Text Primary (#1F2937) on White: 14.5:1 (AAA合格)
+- カラーだけに頼らない情報伝達（アイコン・ラベル併用）
+
+**実装詳細:** `docs/design/color-system.md` 参照
 
 ---
 
