@@ -9,8 +9,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { StatusIcon } from '@/lib/icons/status-icons';
 import { detectGpuWebGL, normalizeGpuName } from '@/lib/gpu-detector-client';
 import { GpuSelectorModal } from './gpu-selector-modal';
+import { Cpu } from 'lucide-react';
 import type { GpuDetectionResult, GpuMapping } from '@/lib/types';
 
 interface GpuDetectorProps {
@@ -156,7 +158,10 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">🖥️ GPU検知中...</CardTitle>
+          <CardTitle className="text-2xl flex items-center gap-2">
+            <StatusIcon type="processing" spinning size={24} className="text-primary" />
+            GPU検知中...
+          </CardTitle>
           <CardDescription className="text-base">
             あなたのグラフィックカードを確認しています
           </CardDescription>
@@ -170,8 +175,9 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
             aria-valuemin={0}
             aria-valuemax={100}
           />
-          <p className="text-base text-muted-foreground text-center leading-relaxed">
-            💡 Tip: OBSはシーンコレクションで複数の配信スタイルを管理できます
+          <p className="text-base text-muted-foreground text-center leading-relaxed flex items-center justify-center gap-2">
+            <StatusIcon type="info" size={16} className="text-primary flex-shrink-0" />
+            <span>Tip: OBSはシーンコレクションで複数の配信スタイルを管理できます</span>
           </p>
         </CardContent>
       </Card>
@@ -182,8 +188,18 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            {error ? '⚠️ GPU検知完了（フォールバック）' : '✅ GPU検知完了'}
+          <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            {error ? (
+              <>
+                <StatusIcon type="warning" size={24} className="text-yellow-600" />
+                GPU検知完了（フォールバック）
+              </>
+            ) : (
+              <>
+                <StatusIcon type="success" size={24} className="text-primary" />
+                GPU検知完了
+              </>
+            )}
           </CardTitle>
           <CardDescription className="text-base">
             検知結果を確認して次に進んでください
@@ -203,16 +219,25 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
               aria-atomic="true"
             >
               <div className="flex items-start gap-3">
-                <span className="text-2xl">{error ? '⚠️' : 'ℹ️'}</span>
+                <StatusIcon
+                  type={error ? 'warning' : 'info'}
+                  size={24}
+                  className={error ? 'text-yellow-600 flex-shrink-0' : 'text-blue-600 flex-shrink-0'}
+                />
                 <div className="flex-1">
-                  <p className={`font-bold text-base ${
+                  <p className={`font-bold text-base flex items-center gap-2 ${
                     error
                       ? 'text-yellow-900 dark:text-yellow-100'
                       : 'text-blue-900 dark:text-blue-100'
                   }`}>
-                    {error
-                      ? 'GPU検知に失敗しました'
-                      : '⚠️ GPU検知の信頼度が低めです'}
+                    {error ? (
+                      'GPU検知に失敗しました'
+                    ) : (
+                      <>
+                        <StatusIcon type="warning" size={16} />
+                        GPU検知の信頼度が低めです
+                      </>
+                    )}
                   </p>
                   <p className={`text-base mt-2 leading-relaxed ${
                     error
@@ -240,8 +265,9 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
               className="text-sm text-muted-foreground"
               aria-label="GPU検出の詳細情報"
             >
-              <summary className="cursor-pointer hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-1 py-1">
-                🔍 検出詳細（デバッグ）
+              <summary className="cursor-pointer hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-1 py-1 flex items-center gap-2">
+                <Cpu size={16} />
+                検出詳細（デバッグ）
               </summary>
               <div className="mt-2 p-3 bg-muted rounded space-y-1 font-mono text-xs">
                 <div><strong>WebGL Raw:</strong> {result.rawName}</div>

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { StatusIcon } from '@/lib/icons/status-icons';
 import { measureSpeed, assessSpeed } from '@/lib/speed-tester';
 import type { SpeedTestResult } from '@/lib/types';
 
@@ -96,7 +97,10 @@ export function SpeedTester({ onComplete }: SpeedTesterProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">⚠️ 回線速度測定失敗</CardTitle>
+          <CardTitle className="text-2xl flex items-center gap-2">
+            <StatusIcon type="warning" size={24} className="text-yellow-600" />
+            回線速度測定失敗
+          </CardTitle>
           <CardDescription className="text-base">
             もう一度測定してください
           </CardDescription>
@@ -128,7 +132,10 @@ export function SpeedTester({ onComplete }: SpeedTesterProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">✅ 回線速度測定完了</CardTitle>
+        <CardTitle className="text-2xl font-bold flex items-center gap-2">
+          <StatusIcon type="success" size={24} className="text-primary" />
+          回線速度測定完了
+        </CardTitle>
         <CardDescription className="text-base">
           測定結果を確認して次に進んでください
         </CardDescription>

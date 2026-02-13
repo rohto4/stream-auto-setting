@@ -68,18 +68,17 @@ export function DesktopView() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4" role="group" aria-label="ジャンル選択肢">
-              <GenreCard emoji="🎯" title="激しいゲーム" subtitle="60FPS高画質" examples="Apex Legends, VALORANT, Overwatch 2" genreId="fps-high" onSelect={handleGenreSelect} />
-              <GenreCard emoji="⚔️" title="アクションゲーム" subtitle="動きと画質のバランス" examples="原神, ストリートファイター6, FF14" genreId="rpg-mid" onSelect={handleGenreSelect} />
-              <GenreCard emoji="🧩" title="ゆっくりゲーム" subtitle="超高画質" examples="雀魂, ぷよぷよ, Among Us" genreId="puzzle-low" onSelect={handleGenreSelect} />
-                            <GenreCard
-                              emoji="🎤"
-                              title="雑談・歌配信"
-                              subtitle="音質重視"
-                              examples="雑談, 歌枠, お絵描き, ASMR"
-                              genreId="chat"
-                              onSelect={handleGenreSelect}
-                            />
-              <GenreCard emoji="🕹️" title="レトロゲーム" subtitle="クラシックゲーム" examples="マリオ, ポケモン, ドラクエ" genreId="retro" onSelect={handleGenreSelect} />
+              <GenreCard title="激しいゲーム" subtitle="60FPS高画質" examples="Apex Legends, VALORANT, Overwatch 2" genreId="fps-high" onSelect={handleGenreSelect} />
+              <GenreCard title="アクションゲーム" subtitle="動きと画質のバランス" examples="原神, ストリートファイター6, FF14" genreId="rpg-mid" onSelect={handleGenreSelect} />
+              <GenreCard title="ゆっくりゲーム" subtitle="超高画質" examples="雀魂, ぷよぷよ, Among Us" genreId="puzzle-low" onSelect={handleGenreSelect} />
+              <GenreCard
+                title="雑談・歌配信"
+                subtitle="音質重視"
+                examples="雑談, 歌枠, お絵描き, ASMR"
+                genreId="chat"
+                onSelect={handleGenreSelect}
+              />
+              <GenreCard title="レトロゲーム" subtitle="クラシックゲーム" examples="マリオ, ポケモン, ドラクエ" genreId="retro" onSelect={handleGenreSelect} />
             </CardContent>
           </Card>
         )}

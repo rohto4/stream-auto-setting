@@ -57,7 +57,7 @@ export function MobileView() {
         {/* ヘッダー */}
         <motion.div className="text-center space-y-2" variants={itemVariants}>
           <h1 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-beginner-gradient">
-            🎯 オートOBS設定
+            オートOBS設定
           </h1>
           <p className="text-lg text-muted-foreground">
             配信の準備、3分で完了
