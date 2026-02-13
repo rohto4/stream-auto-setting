@@ -3,7 +3,11 @@
  * 単一選択（ラジオボタン）と複数選択（チェックボックス）の両方に対応
  */
 
+'use client';
+
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 
 interface Option {
   id: string;
@@ -53,13 +57,16 @@ export function QuestionItem({
         {question}
       </h3>
       <div className="space-y-3">
-        {options.map((option) => (
-          <label
+        {options.map((option, index) => (
+          <motion.label
             key={option.id}
-            className={`flex items-start p-4 rounded-lg border-2 cursor-pointer transition-colors ${
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={`flex items-start p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
               isChecked(option.id)
-                ? 'border-primary bg-primary/5'
-                : 'border-border hover:border-primary/50'
+                ? 'border-primary bg-primary/10 shadow-sm'
+                : 'border-border hover:border-primary/50 hover:bg-primary/5'
             }`}
           >
             <input
@@ -73,9 +80,50 @@ export function QuestionItem({
                   ? handleSingleChange(option.id)
                   : handleMultipleChange(option.id)
               }
-              className="mt-1 mr-3 h-4 w-4"
+              className="sr-only"
               aria-label={option.label}
             />
+            {/* カスタムラジオボタン/チェックボックス */}
+            <div className="flex-shrink-0 mt-0.5 mr-3">
+              {type === 'single' ? (
+                // ラジオボタン
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                    isChecked(option.id)
+                      ? 'border-primary bg-primary'
+                      : 'border-muted-foreground/50'
+                  }`}
+                >
+                  {isChecked(option.id) && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className="w-2.5 h-2.5 rounded-full bg-primary-foreground"
+                    />
+                  )}
+                </div>
+              ) : (
+                // チェックボックス
+                <div
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                    isChecked(option.id)
+                      ? 'border-primary bg-primary'
+                      : 'border-muted-foreground/50'
+                  }`}
+                >
+                  {isChecked(option.id) && (
+                    <motion.div
+                      initial={{ scale: 0, rotate: -90 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    >
+                      <Check size={14} className="text-primary-foreground" strokeWidth={3} />
+                    </motion.div>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex-1">
               <div className="text-base font-medium">
                 {option.label}
@@ -86,7 +134,7 @@ export function QuestionItem({
                 </div>
               )}
             </div>
-          </label>
+          </motion.label>
         ))}
       </div>
     </div>
