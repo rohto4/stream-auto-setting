@@ -57,6 +57,89 @@
 
 ---
 
+## 2026-02-14: アイコンシステム実装（Task #2）
+
+### 実装内容
+**Commit:** `78b3d65` - feat: replace Unicode emojis with custom icon components (Task #2)
+
+#### 目的
+Unicode絵文字をプロフェッショナルなlucide-reactアイコンに置き換え、生成AIテンプレートからの脱却。
+
+#### 実装項目
+
+1. **アイコンマッピング作成**
+   - `lib/icons/genre-icons.tsx` - ジャンル別アイコン（Crosshair, Swords, Puzzle, Mic, Gamepad2）
+   - `lib/icons/status-icons.tsx` - ステータスアイコン（Success, Error, Warning, Info, Processing, etc.）
+
+2. **コンポーネント更新**
+   - `components/mobile/genre-card.tsx` - emoji props削除、GenreIcon使用、背景色付き
+   - `components/desktop/desktop-view.tsx` - GenreCard呼び出しからemoji削除
+   - `components/desktop/gpu-detector.tsx` - 全絵文字をStatusIconに置換
+   - `components/desktop/speed-tester.tsx` - タイトル絵文字をStatusIconに置換
+   - `components/mobile/mobile-view.tsx` - タイトル絵文字削除
+
+3. **デザイン改善**
+   - アイコン背景: rounded-lg + bg-primary/10
+   - ローディング: spinning animation（Loader2アイコン）
+   - ホバー効果: border-primary/50
+
+#### テスト結果
+- ✅ `npm run build` 成功
+- ✅ 型チェック合格
+- ✅ ビルドサイズ: +2.3 KB（lucide-reactアイコン追加）
+- ✅ アニメーション動作確認
+
+#### 既知の制限事項
+- post-downloadコンポーネント群の絵文字は未置換（優先度低）
+- ドキュメント内の絵文字は残存（機能に影響なし）
+
+#### 次のタスクへの影響
+- Task #3: カスタムUIコンポーネントに統一されたアイコンシステムを適用可能
+
+---
+
+## 2026-02-14: カスタムラジオ/チェックボックス実装（Task #3）
+
+### 実装内容
+**Commit:** `1d67031` - feat: implement custom radio/checkbox with animations (Task #3)
+
+#### 目的
+radix-uiのデフォルトUIから脱却し、ブランドカラーに合わせたアニメーション付きカスタムコンポーネントを実装。
+
+#### 実装項目
+
+1. **カスタムコンポーネント設計**
+   - ネイティブinput: `sr-only`でアクセシビリティ維持
+   - カスタムビジュアル: ラジオ（円形）、チェックボックス（四角形）
+   - Framer Motion: scale/rotate アニメーション
+   - ブランドカラー: Beginner Green使用
+
+2. **アニメーション仕様**
+   - ラジオボタン: 内側の円がscaleアニメーションで出現
+   - チェックボックス: チェックマークがscale + rotate (-90° → 0°)
+   - カードレンダリング: Staggered animation (0.1s delay per item)
+   - トランジション: Spring animation (stiffness: 300, damping: 20)
+
+3. **スタイル詳細**
+   - 選択状態: border-primary + bg-primary/10 + shadow-sm
+   - 未選択: border-border + hover:border-primary/50
+   - カスタムサイズ: w-5 h-5（標準的なサイズ）
+   - チェックマーク: lucide-react Check icon (size 14, strokeWidth 3)
+
+#### テスト結果
+- ✅ `npm run build` 成功
+- ✅ 型チェック合格
+- ✅ ビルドサイズ: +0.3 KB（Framer Motion既存、増加わずか）
+- ✅ アニメーション滑らか、アクセシビリティ維持
+
+#### 既知の制限事項
+なし
+
+#### 次のタスクへの影響
+- Task #4: この実装をベースに、他のUIコンポーネントも統一デザインに
+
+---
+
 ## テンプレート（次回実装時に使用）
 
 ### YYYY-MM-DD: [タスク名]（Task #X）
