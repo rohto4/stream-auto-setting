@@ -41,6 +41,7 @@ export function calculateObsConfig(
   const advancedConfig = calculateAdvancedSettings(gpu, genre, fps);
 
   return {
+    audioBitrate: genre.audioBitrate,
     encoder: encoderConfig.encoder,
     preset: encoderConfig.preset,
     bitrate,
@@ -232,6 +233,7 @@ function calculateAdvancedSettings(
  */
 export function getSafeDefaultConfig(): ObsConfig {
   return {
+    audioBitrate: 160,
     encoder: 'obs_x264',
     preset: 'veryfast',
     bitrate: 5000,
