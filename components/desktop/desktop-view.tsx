@@ -1,0 +1,191 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { GenreCard } from '../mobile/genre-card';
+import { GpuDetector } from './gpu-detector';
+import { SpeedTester } from './speed-tester';
+import { ConfigConfirm } from './config-confirm';
+import { AdvancedSettingsPage } from './advanced-settings-page';
+import { GuideRequired } from '../post-download/guide-required';
+import { GuidePerformance } from '../post-download/guide-performance';
+import { GuideOptional } from '../post-download/guide-optional';
+import { GuideComplete } from '../post-download/guide-complete';
+import { toast } from 'sonner';
+import type { GpuDetectionResult, SpeedTestResult, GenreId, ObsConfig, GuideSuggestion, GuideItem } from '@/lib/types';
+import { findGenreById } from '@/lib/db/queries';
+
+type Step = 'genre' | 'detect-gpu' | 'detect-speed' | 'confirm' | 'advanced-settings' | 'generate' | 'complete' | 'guide-required' | 'guide-performance' | 'guide-optional';
+
+export function DesktopView() {
+  const [step, setStep] = useState<Step>('genre');
+  const [genre, setGenre] = useState<GenreId | null>(null);
+  const [gpuResult, setGpuResult] = useState<GpuDetectionResult | null>(null);
+  const [speedResult, setSpeedResult] = useState<SpeedTestResult | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [guideItems, setGuideItems] = useState<GuideItem[] | null>(null);
+
+  // generateステップに入ったら自動的に生成を開始
+  useEffect(() => {
+    if (step === 'generate' && !generating && gpuResult && speedResult && genre) {
+      handleGenerate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  const resetAllState = () => {
+    setStep('genre');
+    setGenre(null);
+    setGpuResult(null);
+    setSpeedResult(null);
+    setGenerating(false);
+    setGuideItems(null);
+    toast.info('最初から入力し直します');
+  };
+
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-primary/10 to-background p-8">
+      <div className="max-w-4xl mx-auto space-y-8 py-12">
+        {/* ヘッダー */}
+        <div className="text-center space-y-4">
+          <h1 className="text-5xl font-bold tracking-tight">
+            オートOBS設定
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            YouTube Live特化型OBS設定自動生成
+          </p>
+        </div>
+
+        {/* ステップ表示 */}
+        {step === 'genre' && (
+          <Card role="region" aria-label="配信ジャンル選択">
+            <CardHeader>
+              <CardTitle className="text-2xl">🎮 配信する内容を選択してください</CardTitle>
+              <CardDescription className="text-base">
+                あなたが配信するゲームやコンテンツ
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4" role="group" aria-label="ジャンル選択肢">
+              <GenreCard emoji="🎯" title="激しいゲーム" subtitle="60FPS高画質" examples="Apex Legends, VALORANT, Overwatch 2" genreId="fps-high" onSelect={handleGenreSelect} />
+              <GenreCard emoji="⚔️" title="アクションゲーム" subtitle="動きと画質のバランス" examples="原神, ストリートファイター6, FF14" genreId="rpg-mid" onSelect={handleGenreSelect} />
+              <GenreCard emoji="🧩" title="ゆっくりゲーム" subtitle="超高画質" examples="雀魂, ぷよぷよ, Among Us" genreId="puzzle-low" onSelect={handleGenreSelect} />
+                            <GenreCard
+                              emoji="🎤"
+                              title="雑談・歌配信"
+                              subtitle="音質重視"
+                              examples="雑談, 歌枠, お絵描き, ASMR"
+                              genreId="chat"
+                              onSelect={handleGenreSelect}
+                            />
+              <GenreCard emoji="🕹️" title="レトロゲーム" subtitle="クラシックゲーム" examples="マリオ, ポケモン, ドラクエ" genreId="retro" onSelect={handleGenreSelect} />
+            </CardContent>
+          </Card>
+        )}
+
+        {step === 'detect-gpu' && <GpuDetector onComplete={(result) => { setGpuResult(result); setStep('detect-speed'); }} />}
+        {step === 'detect-speed' && <SpeedTester onComplete={(result) => { setSpeedResult(result); setStep('confirm'); }} />}
+        {step === 'confirm' && gpuResult && speedResult && genre && <ConfigConfirm genre={genre} gpuResult={gpuResult} speedResult={speedResult} onConfirm={() => setStep('generate')} onAdvanced={() => setStep('advanced-settings')} onReset={resetAllState} />}
+        {step === 'advanced-settings' && gpuResult && speedResult && genre && <AdvancedSettingsPage genre={genre} gpuResult={gpuResult} speedResult={speedResult} onGenerate={handleGenerateFromAdvanced} onReset={() => setStep('confirm')} />}
+        {step === 'generate' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">⚙️ 設定を生成しています...</CardTitle>
+              <CardDescription className="text-base">最適なOBS設定を計算中</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Progress value={undefined} className="w-full" />
+              <p className="text-base text-muted-foreground text-center leading-relaxed">💡 Tip: 生成された設定ファイルはOBSの設定フォルダにインポートしてください</p>
+            </CardContent>
+          </Card>
+        )}
+        {step === 'complete' && <GuideComplete onStartGuide={() => setStep('guide-required')} onReset={resetAllState} />}
+        {step === 'guide-required' && guideItems && <GuideRequired items={guideItems.filter(it => it.category === 'required')} onComplete={() => setStep('guide-performance')} />}
+        {step === 'guide-performance' && guideItems && <GuidePerformance items={guideItems.filter(it => it.category.startsWith('performance'))} onComplete={() => setStep('guide-optional')} />}
+        {step === 'guide-optional' && guideItems && <GuideOptional items={guideItems.filter(it => it.category === 'optional')} onComplete={() => { toast.success('設定ガイドが完了しました！'); resetAllState(); }} />}
+      </div>
+    </main>
+  );
+
+  function handleGenreSelect(selectedGenre: GenreId) {
+    setGenre(selectedGenre);
+    setStep('detect-gpu');
+    toast.success('ジャンルを選択しました');
+  }
+
+  async function handleGenerate() {
+    if (!gpuResult || !speedResult || !genre || generating) return;
+    setGenerating(true);
+    setStep('generate');
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ genre, gpuDetection: gpuResult, speedTest: speedResult, guideUpdates: [] }),
+      });
+      if (!response.ok) throw new Error('Config generation failed');
+      
+      await processApiResponse(response);
+      
+      setStep('complete');
+      toast.success('設定ファイルをダウンロードしました');
+    } catch (error) {
+      console.error('Config generation failed:', error);
+      toast.error('設定生成に失敗しました');
+      setStep('confirm');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function handleGenerateFromAdvanced(customConfig: ObsConfig, guideUpdates: GuideSuggestion[]) {
+    if (!gpuResult || !speedResult || !genre || generating) return;
+    setGenerating(true);
+    setStep('generate');
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ genre, gpuDetection: gpuResult, speedTest: speedResult, overrides: customConfig, guideUpdates: guideUpdates }),
+      });
+      if (!response.ok) throw new Error('Config generation failed');
+
+      await processApiResponse(response);
+
+      setStep('complete');
+      toast.success('カスタム設定ファイルをダウンロードしました');
+    } catch (error) {
+      console.error('Config generation failed:', error);
+      toast.error('設定生成に失敗しました');
+      setStep('advanced-settings');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function processApiResponse(response: Response) {
+    // 1. ガイドデータをヘッダーから取得
+    const guideDataHeader = response.headers.get('X-Guide-Data');
+    if (guideDataHeader) {
+      try {
+        const decoded = atob(guideDataHeader);
+        const items = JSON.parse(decoded);
+        setGuideItems(items);
+      } catch (e) {
+        console.error("Failed to parse guide data:", e);
+        // フォールバックとして静的ガイドを利用するなどの処理も可能
+        setGuideItems(null); 
+      }
+    }
+
+    // 2. ZIPファイルをダウンロード
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `obs-config-${Date.now()}.zip`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}

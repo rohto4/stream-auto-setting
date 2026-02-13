@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "comment": "stream-auto-setting プロジェクト用権限設定",
+  "defaultMode": "acceptEdits",
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install*)",
+      "Bash(node scripts/*)",
+      "Bash(npx *)",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Edit(**)",
+      "Write(**)",
+      "Read(**)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Read(.env*)",
+      "Read(./secrets/**)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true
+  }
+}
