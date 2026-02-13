@@ -145,6 +145,7 @@ export function findGenreById(genreId: GenreId): GenreConfig | null {
     qualityPriority: row.quality_priority,
     recommendedFps: row.recommended_fps,
     keyframeInterval: row.keyframe_interval,
+    audioBitrate: row.audio_bitrate,
   };
 }
 
@@ -165,6 +166,7 @@ export function getAllGenres(): GenreConfig[] {
     qualityPriority: row.quality_priority,
     recommendedFps: row.recommended_fps,
     keyframeInterval: row.keyframe_interval,
+    audioBitrate: row.audio_bitrate,
   }));
 }
 
