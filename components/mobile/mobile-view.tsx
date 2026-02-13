@@ -47,7 +47,7 @@ export function MobileView() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary/10 to-background p-4">
+    <main className="min-h-screen bg-gradient-to-br from-beginner-green/5 via-background to-beginner-yellow/5 p-4">
       <motion.div
         className="max-w-md mx-auto space-y-6 py-8"
         variants={containerVariants}
@@ -56,7 +56,7 @@ export function MobileView() {
       >
         {/* ヘッダー */}
         <motion.div className="text-center space-y-2" variants={itemVariants}>
-          <h1 className="text-4xl font-bold tracking-tight">
+          <h1 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-beginner-gradient">
             🎯 オートOBS設定
           </h1>
           <p className="text-lg text-muted-foreground">

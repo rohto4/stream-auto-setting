@@ -46,11 +46,11 @@ export function DesktopView() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary/10 to-background p-8">
+    <main className="min-h-screen bg-gradient-to-br from-beginner-green/5 via-background to-beginner-yellow/5 p-8">
       <div className="max-w-4xl mx-auto space-y-8 py-12">
         {/* ヘッダー */}
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold tracking-tight">
+          <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-beginner-gradient">
             オートOBS設定
           </h1>
           <p className="text-xl text-muted-foreground">

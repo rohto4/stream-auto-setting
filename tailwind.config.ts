@@ -51,12 +51,20 @@ const config: Config = {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
-  			}
+  			},
+  			// Brand Colors
+  			'beginner-green': 'hsl(var(--beginner-green))',
+  			'beginner-yellow': 'hsl(var(--beginner-yellow))',
+  			'obs-black': 'hsl(var(--obs-black))'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		backgroundImage: {
+  			'beginner-gradient': 'linear-gradient(135deg, hsl(var(--beginner-green)) 0%, hsl(var(--beginner-yellow)) 100%)',
+  			'obs-gradient': 'linear-gradient(180deg, hsl(var(--obs-black)) 0%, hsl(0 0% 5%) 100%)'
   		},
   		keyframes: {
   			'accordion-down': {
