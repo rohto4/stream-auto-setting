@@ -62,5 +62,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-noto-sans-jp), var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'palt' 1; /* 日本語プロポーショナルメトリクス */
+    letter-spacing: 0.02em; /* わずかな字間調整 */
+    line-height: 1.7; /* 読みやすい行間 */
+  }
+
+  /* 見出し用の調整 */
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    font-weight: 700;
   }
 }
