@@ -1,11 +1,5 @@
 {
   "name": "オートOBS設定",
-  "env": {
-    "NEXT_PUBLIC_SITE_URL": {
-      "description": "サイトのベースURL",
-      "required": false
-    }
-  },
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
