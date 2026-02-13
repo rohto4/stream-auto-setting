@@ -101,9 +101,9 @@ export function DesktopView() {
           </Card>
         )}
         {step === 'complete' && <GuideComplete onStartGuide={() => setStep('guide-required')} onReset={resetAllState} />}
-        {step === 'guide-required' && guideItems && <GuideRequired items={guideItems.filter(it => it.category === 'required')} onComplete={() => setStep('guide-performance')} />}
-        {step === 'guide-performance' && guideItems && <GuidePerformance items={guideItems.filter(it => it.category.startsWith('performance'))} onComplete={() => setStep('guide-optional')} />}
-        {step === 'guide-optional' && guideItems && <GuideOptional items={guideItems.filter(it => it.category === 'optional')} onComplete={() => { toast.success('設定ガイドが完了しました！'); resetAllState(); }} />}
+        {step === 'guide-required' && <GuideRequired onComplete={() => setStep('guide-performance')} />}
+        {step === 'guide-performance' && <GuidePerformance onComplete={() => setStep('guide-optional')} />}
+        {step === 'guide-optional' && <GuideOptional onComplete={() => { toast.success('設定ガイドが完了しました！'); resetAllState(); }} />}
       </div>
     </main>
   );
