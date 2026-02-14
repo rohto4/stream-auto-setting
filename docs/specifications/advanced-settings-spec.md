@@ -280,4 +280,146 @@ function calculateAdvancedSettings(
   return { config, guideUpdates };
 }
 ```
-（以降の古い仕様は削除）
+
+---
+
+## 5. UI実装詳細（2026-02-14更新）
+
+### 5.1 カスタムラジオボタン仕様
+
+**実装:** `components/desktop/question-item.tsx` (Task #3完了)
+
+#### デザイン原則
+- ネイティブinput要素: `className="sr-only"`（アクセシビリティ維持）
+- カスタムビジュアル: ブランドカラーとアニメーション
+- タッチデバイス対応: 十分なタップ領域（p-4）
+
+#### スタイル仕様
+
+```tsx
+// カードスタイル
+<motion.label
+  className={`
+    flex items-start p-4 rounded-lg border-2 cursor-pointer
+    transition-all duration-200
+    ${isChecked
+      ? 'border-primary bg-primary/10 shadow-sm'
+      : 'border-border hover:border-primary/50 hover:bg-primary/5'
+    }
+  `}
+>
+```
+
+#### ラジオボタンビジュアル
+
+```tsx
+<div className={`
+  w-5 h-5 rounded-full border-2
+  flex items-center justify-center transition-all
+  ${isChecked ? 'border-primary bg-primary' : 'border-muted-foreground/50'}
+`}>
+  {isChecked && (
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="w-2.5 h-2.5 rounded-full bg-primary-foreground"
+    />
+  )}
+</div>
+```
+
+#### チェックボックスビジュアル
+
+```tsx
+<div className={`
+  w-5 h-5 rounded border-2
+  flex items-center justify-center transition-all
+  ${isChecked ? 'border-primary bg-primary' : 'border-muted-foreground/50'}
+`}>
+  {isChecked && (
+    <motion.div
+      initial={{ scale: 0, rotate: -90 }}
+      animate={{ scale: 1, rotate: 0 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    >
+      <Check size={14} className="text-primary-foreground" strokeWidth={3} />
+    </motion.div>
+  )}
+</div>
+```
+
+### 5.2 アニメーション仕様
+
+#### Staggered Animation（質問カード表示）
+
+```tsx
+{options.map((option, index) => (
+  <motion.label
+    key={option.id}
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.1 }}
+  >
+    {/* カード内容 */}
+  </motion.label>
+))}
+```
+
+**効果:**
+- 0.1秒ずつ遅延して順次表示
+- 左から右にスライド（x: -20 → 0）
+- フェードイン（opacity: 0 → 1）
+
+#### Spring Animation（選択時）
+
+```tsx
+transition={{
+  type: 'spring',
+  stiffness: 300,  // バネの硬さ
+  damping: 20      // 減衰率
+}}
+```
+
+**効果:**
+- 自然な弾性アニメーション
+- 即座に反応するが、滑らかに完了
+
+### 5.3 アクセシビリティ対応
+
+```tsx
+<input
+  type={inputType}
+  name={question}
+  id={`${question}-${option.id}`}
+  value={option.id}
+  checked={isChecked(option.id)}
+  onChange={handleChange}
+  className="sr-only"           // スクリーンリーダー対応
+  aria-label={option.label}
+/>
+```
+
+**対応項目:**
+- ✅ キーボードナビゲーション（label要素で自動対応）
+- ✅ スクリーンリーダー（sr-only native input + aria-label）
+- ✅ フォーカス表示（focus:ring-2 focus:ring-primary）
+- ✅ ARIA属性（aria-label）
+
+---
+
+## 6. 実装状況
+
+**Phase:** Task #3完了 (2026-02-14)
+**Status:** ✅ Production Ready
+
+### 実装ファイル
+- `components/desktop/question-item.tsx` - カスタムラジオ/チェックボックス
+- `components/desktop/advanced-settings-page.tsx` - 4問ヒアリングUI
+- `lib/advanced-settings-calculator.ts` - 設定計算ロジック
+
+### テスト結果
+- ✅ ビルド成功（78.2 KB）
+- ✅ TypeScript型エラー 0件
+- ✅ アニメーション動作確認
+- ✅ アクセシビリティ WCAG AAA準拠

@@ -76,6 +76,99 @@ export const gradients = {
 
 ---
 
+### 1.3 アイコンシステム
+
+**実装日:** 2026-02-14 (Task #2)
+**目的:** Unicode絵文字からlucide-reactプロフェッショナルアイコンへの置き換え
+
+#### ジャンルアイコン
+
+| ジャンルID | 旧（絵文字） | 新（lucide-react） | 用途 |
+|-----------|------------|--------------------|------|
+| `fps-high` | 🎮 | `Crosshair` | 激しいゲーム（FPS/競技） |
+| `rpg-mid` | ⚔️ | `Swords` | アクションゲーム（RPG） |
+| `puzzle-low` | 🧩 | `Puzzle` | ゆっくりゲーム（パズル） |
+| `chat` | 🎤 | `Mic` | 雑談・歌配信 |
+| `retro` | 🕹️ | `Gamepad2` | レトロゲーム |
+
+#### ステータスアイコン
+
+| 状態 | 旧（絵文字） | 新（lucide-react） | 用途 |
+|------|------------|--------------------|------|
+| 成功 | ✅ | `CheckCircle2` | 完了状態 |
+| エラー | ❌ | `XCircle` | エラー表示 |
+| 警告 | ⚠️ | `AlertTriangle` | 警告メッセージ |
+| 情報 | 💡 | `Info` | Tipやヒント |
+| 処理中 | 🔄 | `Loader2` | ローディング（spinning） |
+| 設定 | ⚙️ | `Settings` | 設定関連 |
+
+#### 実装例
+
+```tsx
+// ジャンルアイコン（背景付き）
+import { GenreIcon } from '@/lib/icons/genre-icons';
+
+<div className="p-2 rounded-lg bg-primary/10">
+  <GenreIcon genreId="fps-high" className="text-primary" size={28} />
+</div>
+
+// ステータスアイコン（タイトル用）
+import { StatusIcon } from '@/lib/icons/status-icons';
+
+<StatusIcon type="success" size={24} className="text-primary" />
+<StatusIcon type="processing" spinning size={24} />
+```
+
+**実装詳細:** `lib/icons/genre-icons.tsx`, `lib/icons/status-icons.tsx`
+
+---
+
+### 1.4 カスタムUIコンポーネント
+
+**実装日:** 2026-02-14 (Task #3)
+**目的:** radix-uiデフォルトから脱却、ブランドに合わせたアニメーション付きUI
+
+#### ラジオボタン / チェックボックス
+
+**デザイン:**
+- ネイティブinput: `sr-only`（アクセシビリティ維持）
+- カスタムビジュアル: ラジオ（円形）、チェックボックス（四角形）
+- 選択状態: `border-primary` + `bg-primary`
+- 未選択: `border-muted-foreground/50`
+
+**アニメーション（Framer Motion）:**
+```tsx
+// ラジオボタン - 内側の円
+<motion.div
+  initial={{ scale: 0 }}
+  animate={{ scale: 1 }}
+  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+  className="w-2.5 h-2.5 rounded-full bg-primary-foreground"
+/>
+
+// チェックボックス - チェックマーク
+<motion.div
+  initial={{ scale: 0, rotate: -90 }}
+  animate={{ scale: 1, rotate: 0 }}
+  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+>
+  <Check size={14} strokeWidth={3} />
+</motion.div>
+```
+
+**カードアニメーション（Staggered）:**
+```tsx
+const containerVariants = {
+  visible: {
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+};
+```
+
+**実装詳細:** `components/desktop/question-item.tsx`
+
+---
+
 ## 2. モバイルビュー（スマホ版）
 
 ### 2.1 画面構成（ランディングページ）
