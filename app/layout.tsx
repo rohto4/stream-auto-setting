@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Noto_Sans_JP } from 'next/font/google';
 import Script from 'next/script';
 import { Toaster } from '@/components/ui/sonner';
@@ -15,6 +15,7 @@ const notoSansJP = Noto_Sans_JP({
   weight: ['400', '500', '700', '900'],
   variable: '--font-noto-sans-jp',
   display: 'swap',
+  preload: true, // 優先的に読み込み
 });
 
 export const metadata: Metadata = {
@@ -22,12 +23,11 @@ export const metadata: Metadata = {
   description: '配信初心者が迷わず、3分で最適なOBS設定を手に入れられる。専門知識不要の自動設定ツール。GPU自動検知・回線速度測定・設定ファイル自動生成。',
   keywords: ['OBS', 'YouTube Live', '配信設定', '自動生成', 'GPU検知', 'ビットレート', 'ゲーム配信'],
   authors: [{ name: 'オートOBS設定チーム' }],
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: '#0f172a',
   robots: {
     index: true,
     follow: true,
   },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://obs.auto'),
   openGraph: {
     title: 'オートOBS設定 - YouTube Live特化型OBS設定自動生成',
     description: '配信初心者が迷わず、3分で最適なOBS設定を手に入れられる。GPU自動検知・回線速度測定・設定ファイル自動生成。',
@@ -49,6 +49,12 @@ export const metadata: Metadata = {
     description: '配信初心者が迷わず、3分で最適なOBS設定を手に入れられる',
     images: ['/og-image.png'],
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f172a',
 };
 
 export default function RootLayout({

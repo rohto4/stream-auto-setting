@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -8,14 +9,31 @@ import { GenreCard } from '../mobile/genre-card';
 import { GpuDetector } from './gpu-detector';
 import { SpeedTester } from './speed-tester';
 import { ConfigConfirm } from './config-confirm';
-import { AdvancedSettingsPage } from './advanced-settings-page';
-import { GuideRequired } from '../post-download/guide-required';
-import { GuidePerformance } from '../post-download/guide-performance';
-import { GuideOptional } from '../post-download/guide-optional';
-import { GuideComplete } from '../post-download/guide-complete';
 import { toast } from 'sonner';
 import type { GpuDetectionResult, SpeedTestResult, GenreId, ObsConfig, GuideSuggestion, GuideItem } from '@/lib/types';
 import { findGenreById } from '@/lib/db/queries';
+
+// 動的インポート: 初期ロードから除外してパフォーマンス向上
+const AdvancedSettingsPage = dynamic(() => import('./advanced-settings-page').then(mod => mod.AdvancedSettingsPage), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+  ssr: false,
+});
+
+const GuideRequired = dynamic(() => import('../post-download/guide-required').then(mod => mod.GuideRequired), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+});
+
+const GuidePerformance = dynamic(() => import('../post-download/guide-performance').then(mod => mod.GuidePerformance), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+});
+
+const GuideOptional = dynamic(() => import('../post-download/guide-optional').then(mod => mod.GuideOptional), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+});
+
+const GuideComplete = dynamic(() => import('../post-download/guide-complete').then(mod => mod.GuideComplete), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+});
 
 type Step = 'genre' | 'detect-gpu' | 'detect-speed' | 'confirm' | 'advanced-settings' | 'generate' | 'complete' | 'guide-required' | 'guide-performance' | 'guide-optional';
 

@@ -6,14 +6,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { StatusIcon } from '@/lib/icons/status-icons';
 import { detectGpuWebGL, normalizeGpuName } from '@/lib/gpu-detector-client';
-import { GpuSelectorModal } from './gpu-selector-modal';
 import { Cpu } from 'lucide-react';
 import type { GpuDetectionResult, GpuMapping } from '@/lib/types';
+
+// 動的インポート: GPU選択モーダルは必要時のみロード
+const GpuSelectorModal = dynamic(() => import('./gpu-selector-modal').then(mod => mod.GpuSelectorModal), {
+  ssr: false,
+});
 
 interface GpuDetectorProps {
   onComplete: (result: GpuDetectionResult) => void;
