@@ -54,6 +54,15 @@ export function MobileView() {
         initial="hidden"
         animate="visible"
       >
+        {/* FAQリンク */}
+        <motion.div className="flex justify-end" variants={itemVariants}>
+          <Button variant="ghost" size="sm" asChild>
+            <a href="/faq" className="text-sm">
+              FAQ・ヘルプ
+            </a>
+          </Button>
+        </motion.div>
+
         {/* ヘッダー */}
         <motion.div className="text-center space-y-2" variants={itemVariants}>
           <h1 className="text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-beginner-gradient">

@@ -68,6 +68,13 @@ export function DesktopView() {
       <div className="max-w-4xl mx-auto space-y-8 py-12">
         {/* ヘッダー */}
         <div className="text-center space-y-4">
+          <div className="flex justify-end mb-2">
+            <Button variant="ghost" size="sm" asChild>
+              <a href="/faq" className="text-sm">
+                FAQ・ヘルプ
+              </a>
+            </Button>
+          </div>
           <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-beginner-gradient">
             オートOBS設定
           </h1>
