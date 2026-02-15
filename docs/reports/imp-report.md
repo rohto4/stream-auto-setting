@@ -991,3 +991,124 @@ Route (app)                   Size  First Load JS
 4. 離脱率が高いステップの改善施策を立案
 
 ---
+
+## 2026-02-15: Phase 6.3.3 - プリセート保存/読み込み機能実装 💾
+
+### 実装内容
+
+**フェーズ:** Phase 6.3.3
+**ステータス:** ✅ 完了
+**Commit:** `cb599f2` - feat: implement preset save/load feature (Phase 6.3.3) 💾
+
+#### 目的
+複数の配信スタイル（ゲーム配信用、雑談配信用など）を保存・再利用可能にし、リピート利用を促進。
+ユーザーが毎回GPU検出・速度測定をやり直す必要をなくす。
+
+#### 実装項目
+
+1. **プリセート管理システム** (`lib/preset-manager.ts` - 新規)
+   - savePreset() - プリセット保存（LocalStorage）
+   - loadPresets() - 全プリセート読み込み
+   - updatePreset() - プリセート更新
+   - deletePreset() - プリセート削除
+   - loadPresetById() - ID指定読み込み
+   - validatePresetName() - 名前バリデーション（重複チェック、50文字制限）
+
+2. **プリセート型定義** (`lib/types.ts`)
+   - PresetConfig - 保存する設定データ（genre, gpuResult, speedResult, advancedSettings, customConfig）
+   - PresetMetadata - メタデータ（id, name, description, createdAt, updatedAt, config）
+
+3. **プリセート選択UI** (`components/desktop/preset-selector.tsx` - 新規)
+   - プリセート一覧表示（カード形式）
+   - 各プリセートにジャンル・GPU・更新日時のバッジ表示
+   - 「使用する」ボタン - プリセート読み込み
+   - 「削除」ボタン - プリセート削除（確認ダイアログ付き）
+   - 「新しい設定を作成」ボタン - 通常フロー開始
+
+4. **設定確認画面強化** (`components/desktop/config-confirm.tsx`)
+   - 「プリセートとして保存」ボタン追加
+   - Prompt入力でプリセート名を取得
+   - バリデーション + 保存 + Toast通知
+
+5. **デスクトップフロー統合** (`components/desktop/desktop-view.tsx`)
+   - 初期ステップを `preset-select` に変更
+   - handlePresetSelect() - プリセート選択時に全データ設定してconfirmステップへジャンプ
+   - handleNewConfig() - 新規作成時にgenreステップへ遷移
+   - resetAllState() - リセット時にpreset-selectへ戻る
+
+6. **UIコンポーネント追加** (`components/ui/badge.tsx` - 新規)
+   - shadcn/ui互換のBadgeコンポーネント
+   - variant: default, secondary, destructive, outline
+
+#### 変更ファイル
+**新規作成:**
+- `lib/preset-manager.ts` (175行) - プリセート管理ロジック
+- `components/desktop/preset-selector.tsx` (159行) - プリセート選択UI
+- `components/ui/badge.tsx` (45行) - Badgeコンポーネント
+
+**修正:**
+- `lib/types.ts` - PresetConfig, PresetMetadata型追加
+- `components/desktop/config-confirm.tsx` - 保存ボタン + handleSavePreset
+- `components/desktop/desktop-view.tsx` - プリセートフロー統合
+
+#### ビルド結果
+```
+✅ Compiled successfully in 8.6s
+Route (app)                   Size  First Load JS
+┌ ○ /                      50.6 kB       171 kB  (+0.9 KB)
+└ ○ /faq                   20.4 kB       131 kB  (+0 KB)
+```
+- ✅ ビルド成功
+- ✅ バンドルサイズ微増（+0.9 KB、プリセート機能追加）
+- ✅ 型チェック合格
+
+#### テスト結果
+- [x] ビルド成功
+- [x] 型チェック合格
+- [ ] ブラウザ動作確認（LocalStorage保存/読み込み）
+- [ ] プリセート削除確認
+- [ ] バリデーション確認（重複名、長さ制限）
+
+#### 機能仕様
+
+**保存データ:**
+- ジャンル（GenreId）
+- GPU検出結果（GpuDetectionResult）
+- 速度測定結果（SpeedTestResult）
+- 詳細設定（AdvancedSettingsAnswers - オプション）
+- カスタム設定（Partial<ObsConfig> - オプション）
+
+**ストレージ:**
+- LocalStorage キー: `obs-auto-config-presets`
+- JSON形式でシリアライズ
+- Date型は自動変換（保存時文字列化、読み込み時Date復元）
+
+**バリデーション:**
+- プリセット名必須（空白不可）
+- 50文字以内
+- 重複名禁止
+
+**UX:**
+- プリセート選択 → 即座にconfirmステップへジャンプ（GPU検出・速度測定スキップ）
+- プリセート保存 → Toastで成功/失敗通知
+- プリセート削除 → 確認ダイアログ表示
+- 相対時間表示（「今日」「昨日」「3日前」「2週間前」）
+
+#### ユーザーメリット
+- 🎮 **複数スタイル管理** - ゲーム配信、雑談、カラオケなど用途別に保存
+- ⚡ **時間短縮** - 2回目以降はGPU検出・速度測定をスキップ（3分→10秒）
+- 🔄 **リピート利用促進** - 保存済みプリセートがあるため再訪しやすい
+- 💾 **設定履歴** - 過去の設定を保持、いつでも復元可能
+
+#### 期待される効果
+- ユーザー定着率向上（プリセートがあると戻ってきやすい）
+- 2回目以降の完了率向上（GPU検出失敗リスクなし）
+- 複数用途での利用促進（ゲーム+雑談の両方で使う）
+- ユーザー満足度向上（便利機能）
+
+#### 次のタスク候補
+- Phase 6.3.4: ダウンロード履歴機能（プリセートと統合可能）
+- Phase 6.5: SEO最適化（構造化データ、sitemap.xml）
+- デプロイ準備: README更新、環境変数確認
+
+---
