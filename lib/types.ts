@@ -211,3 +211,24 @@ export interface AdvancedSettingsAnswers {
   persona: Persona;
   audioConcerns: AudioConcern[]; // 複数選択可能
 }
+
+// ========================================
+// プリセット保存/読み込み (Phase 6.3.3)
+// ========================================
+
+export interface PresetConfig {
+  genre: GenreId;
+  gpuResult: GpuDetectionResult;
+  speedResult: SpeedTestResult;
+  advancedSettings?: AdvancedSettingsAnswers;
+  customConfig?: Partial<ObsConfig>;
+}
+
+export interface PresetMetadata {
+  id: string; // UUID
+  name: string; // ユーザー指定の名前（例: "ゲーム配信用", "雑談配信用"）
+  description?: string; // オプションの説明
+  createdAt: Date;
+  updatedAt: Date;
+  config: PresetConfig;
+}

@@ -10,7 +10,7 @@ import { GpuDetector } from './gpu-detector';
 import { SpeedTester } from './speed-tester';
 import { ConfigConfirm } from './config-confirm';
 import { toast } from 'sonner';
-import type { GpuDetectionResult, SpeedTestResult, GenreId, ObsConfig, GuideSuggestion, GuideItem } from '@/lib/types';
+import type { GpuDetectionResult, SpeedTestResult, GenreId, ObsConfig, GuideSuggestion, GuideItem, PresetMetadata } from '@/lib/types';
 import { findGenreById } from '@/lib/db/queries';
 import {
   trackGenreSelect,
@@ -41,10 +41,15 @@ const GuideComplete = dynamic(() => import('../post-download/guide-complete').th
   loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
 });
 
-type Step = 'genre' | 'detect-gpu' | 'detect-speed' | 'confirm' | 'advanced-settings' | 'generate' | 'complete' | 'guide-required' | 'guide-performance' | 'guide-optional';
+const PresetSelector = dynamic(() => import('./preset-selector').then(mod => mod.PresetSelector), {
+  loading: () => <div className="flex items-center justify-center p-8">読み込み中...</div>,
+  ssr: false,
+});
+
+type Step = 'preset-select' | 'genre' | 'detect-gpu' | 'detect-speed' | 'confirm' | 'advanced-settings' | 'generate' | 'complete' | 'guide-required' | 'guide-performance' | 'guide-optional';
 
 export function DesktopView() {
-  const [step, setStep] = useState<Step>('genre');
+  const [step, setStep] = useState<Step>('preset-select');
   const [genre, setGenre] = useState<GenreId | null>(null);
   const [gpuResult, setGpuResult] = useState<GpuDetectionResult | null>(null);
   const [speedResult, setSpeedResult] = useState<SpeedTestResult | null>(null);
@@ -60,7 +65,7 @@ export function DesktopView() {
   }, [step]);
 
   const resetAllState = () => {
-    setStep('genre');
+    setStep('preset-select');
     setGenre(null);
     setGpuResult(null);
     setSpeedResult(null);
@@ -68,6 +73,19 @@ export function DesktopView() {
     setGuideItems(null);
     toast.info('最初から入力し直します');
   };
+
+  function handlePresetSelect(preset: PresetMetadata) {
+    setGenre(preset.config.genre);
+    setGpuResult(preset.config.gpuResult);
+    setSpeedResult(preset.config.speedResult);
+    setStep('confirm');
+    toast.success(`プリセット「${preset.name}」を読み込みました`);
+  }
+
+  function handleNewConfig() {
+    setStep('genre');
+    toast.info('新しい設定を作成します');
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-beginner-green/5 via-background to-beginner-yellow/5 p-8">
@@ -90,6 +108,12 @@ export function DesktopView() {
         </div>
 
         {/* ステップ表示 */}
+        {step === 'preset-select' && (
+          <PresetSelector
+            onSelect={handlePresetSelect}
+            onNewConfig={handleNewConfig}
+          />
+        )}
         {step === 'genre' && (
           <Card role="region" aria-label="配信ジャンル選択">
             <CardHeader>

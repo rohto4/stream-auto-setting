@@ -8,8 +8,11 @@
 import { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
+import { toast } from 'sonner';
 import type { GpuDetectionResult, SpeedTestResult, GenreId } from '@/lib/types';
 import { trackConfigConfirmReached, trackAdvancedSettingsStart } from '@/lib/analytics';
+import { savePreset, validatePresetName } from '@/lib/preset-manager';
 
 interface ConfigConfirmProps {
   genre: GenreId;
@@ -44,6 +47,30 @@ export function ConfigConfirm({
       speedResult.uploadMbps
     );
   }, [genre, gpuResult.mapping.gpuName, speedResult.uploadMbps]);
+
+  // プリセート保存
+  function handleSavePreset() {
+    const name = prompt('プリセート名を入力してください（例: ゲーム配信用）');
+    if (!name) return;
+
+    const validation = validatePresetName(name);
+    if (!validation.valid) {
+      toast.error(validation.error);
+      return;
+    }
+
+    try {
+      savePreset(name.trim(), {
+        genre,
+        gpuResult,
+        speedResult,
+      });
+      toast.success(`プリセート「${name.trim()}」を保存しました`);
+    } catch (error) {
+      console.error('Failed to save preset:', error);
+      toast.error('プリセートの保存に失敗しました');
+    }
+  }
 
   // 推奨設定の計算（簡易版）
   const recommendedFps = ['fps-high', 'rpg-mid', 'retro'].includes(genre) ? 60 : 30;
@@ -124,6 +151,16 @@ export function ConfigConfirm({
             size="lg"
           >
             この内容で生成
+          </Button>
+
+          <Button
+            onClick={handleSavePreset}
+            variant="outline"
+            className="w-full text-base py-6 flex items-center gap-2"
+            size="lg"
+          >
+            <Save className="w-5 h-5" />
+            プリセートとして保存
           </Button>
 
           <div className="grid grid-cols-2 gap-3">
