@@ -12,6 +12,11 @@ import { Progress } from '@/components/ui/progress';
 import { StatusIcon } from '@/lib/icons/status-icons';
 import { measureSpeed, assessSpeed } from '@/lib/speed-tester';
 import type { SpeedTestResult } from '@/lib/types';
+import {
+  trackSpeedTestStart,
+  trackSpeedTestComplete,
+  trackSpeedTestFailed,
+} from '@/lib/analytics';
 
 interface SpeedTesterProps {
   onComplete: (result: SpeedTestResult) => void;
@@ -47,6 +52,10 @@ export function SpeedTester({ onComplete }: SpeedTesterProps) {
     setProgress(0);
     setResult(null);
 
+    // Analytics: 速度測定開始
+    const startTime = Date.now();
+    trackSpeedTestStart();
+
     try {
       const speedResult = await measureSpeed((p) => {
         setProgress(p);
@@ -54,11 +63,17 @@ export function SpeedTester({ onComplete }: SpeedTesterProps) {
 
       setResult(speedResult);
       setFailed(false);
-      // 自動遷移を停止（ユーザーが「次へ」をクリックするまで待つ）
+
+      // Analytics: 速度測定完了
+      const duration = (Date.now() - startTime) / 1000;
+      const assessment = assessSpeed(speedResult.uploadMbps);
+      trackSpeedTestComplete(speedResult.uploadMbps, assessment.tier, duration);
     } catch (err) {
       console.error('Speed test error:', err);
       setFailed(true);
-      // 失敗時は結果を設定しない（再測定を促す）
+
+      // Analytics: 速度測定失敗
+      trackSpeedTestFailed(err instanceof Error ? err.message : 'unknown_error');
     } finally {
       setMeasuring(false);
     }

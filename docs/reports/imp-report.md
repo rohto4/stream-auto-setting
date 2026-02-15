@@ -829,3 +829,58 @@ Route (app)                   Size  First Load JS
 - データドリブンなUX改善の基盤構築
 
 ---
+
+## 2026-02-15: Phase 6.4.2補完 - GPU/速度測定コンポーネントへのAnalytics統合
+
+### 実装内容
+
+**フェーズ:** Phase 6.4.2補完
+**ステータス:** ✅ 完了
+
+#### 実装項目
+
+1. **GPU検出コンポーネント統合**
+   - `components/desktop/gpu-detector.tsx`
+   - GPU検出成功イベント: GPU名、ベンダー、信頼度、ノートPC判定を送信
+   - GPU検出失敗イベント: エラーメッセージを送信
+
+2. **速度測定コンポーネント統合**
+   - `components/desktop/speed-tester.tsx`
+   - 速度測定開始イベント
+   - 速度測定完了イベント: 上り速度、Tier、所要時間を送信
+   - 速度測定失敗イベント: エラーメッセージを送信
+
+#### 変更ファイル
+- `components/desktop/gpu-detector.tsx` - GPU検出イベント追加
+- `components/desktop/speed-tester.tsx` - 速度測定イベント追加
+
+#### ビルド結果
+```
+✅ Compiled successfully in 7.5s
+Route (app)                   Size  First Load JS
+┌ ○ /                      49.5 kB       170 kB  (+0.2 KB)
+└ ○ /faq                   20.2 kB       131 kB  (+0.2 KB)
+```
+- ✅ ビルド成功
+- ✅ バンドルサイズ微増（+0.2 KB）
+- ✅ 型チェック合格
+
+#### テスト結果
+- [x] ビルド成功
+- [x] 型チェック合格
+- [ ] 実際のイベント送信確認（デプロイ後）
+
+#### 完了したAnalytics統合
+- ✅ ジャンル選択（desktop-view.tsx）
+- ✅ 設定生成開始（desktop-view.tsx）
+- ✅ GPU検出成功/失敗（gpu-detector.tsx）
+- ✅ 速度測定開始/完了/失敗（speed-tester.tsx）
+- ✅ FAQ閲覧/検索/フィルター/展開（faq/page.tsx）
+
+#### 未統合のコンポーネント
+- ⏳ 設定確認画面到達（config-confirm.tsx）
+- ⏳ 詳細設定開始/完了（advanced-settings-page.tsx）
+- ⏳ ガイド閲覧/項目完了（guide-*.tsx）
+- ⏳ 設定ダウンロード（generate API）
+
+---

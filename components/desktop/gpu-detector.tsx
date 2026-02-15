@@ -14,6 +14,7 @@ import { StatusIcon } from '@/lib/icons/status-icons';
 import { detectGpuWebGL, normalizeGpuName } from '@/lib/gpu-detector-client';
 import { Cpu } from 'lucide-react';
 import type { GpuDetectionResult, GpuMapping } from '@/lib/types';
+import { trackGpuDetected, trackGpuDetectionFailed } from '@/lib/analytics';
 
 // 動的インポート: GPU選択モーダルは必要時のみロード
 const GpuSelectorModal = dynamic(() => import('./gpu-selector-modal').then(mod => mod.GpuSelectorModal), {
@@ -110,8 +111,19 @@ export function GpuDetector({ onComplete }: GpuDetectorProps) {
       // タイムアウトと並列実行
       const gpuResult = await Promise.race([detectionPromise, timeoutPromise]);
       setResult(gpuResult as GpuDetectionResult);
+
+      // Analytics: GPU検出成功
+      trackGpuDetected(
+        (gpuResult as GpuDetectionResult).mapping.gpuName,
+        (gpuResult as GpuDetectionResult).mapping.vendor,
+        (gpuResult as GpuDetectionResult).confidence,
+        (gpuResult as GpuDetectionResult).normalized.toLowerCase().includes('laptop')
+      );
     } catch (err) {
       console.error('GPU detection error:', err);
+
+      // Analytics: GPU検出失敗
+      trackGpuDetectionFailed(err instanceof Error ? err.message : 'unknown_error');
 
       // フォールバック設定
       const fallback: GpuDetectionResult = {
