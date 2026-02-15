@@ -5,9 +5,11 @@
 
 'use client';
 
+import { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { GpuDetectionResult, SpeedTestResult, GenreId } from '@/lib/types';
+import { trackConfigConfirmReached, trackAdvancedSettingsStart } from '@/lib/analytics';
 
 interface ConfigConfirmProps {
   genre: GenreId;
@@ -34,6 +36,15 @@ export function ConfigConfirm({
   onAdvanced,
   onReset,
 }: ConfigConfirmProps) {
+  // Analytics: 設定確認画面到達
+  useEffect(() => {
+    trackConfigConfirmReached(
+      genre,
+      gpuResult.mapping.gpuName,
+      speedResult.uploadMbps
+    );
+  }, [genre, gpuResult.mapping.gpuName, speedResult.uploadMbps]);
+
   // 推奨設定の計算（簡易版）
   const recommendedFps = ['fps-high', 'rpg-mid', 'retro'].includes(genre) ? 60 : 30;
   const recommendedResolution = speedResult.uploadMbps >= 10 ? '1080p' : '720p';
@@ -117,7 +128,10 @@ export function ConfigConfirm({
 
           <div className="grid grid-cols-2 gap-3">
             <Button
-              onClick={onAdvanced}
+              onClick={() => {
+                trackAdvancedSettingsStart();
+                onAdvanced?.();
+              }}
               variant="outline"
               className="text-base py-6"
               size="lg"

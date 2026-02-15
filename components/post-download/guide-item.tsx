@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { GuideItem } from '@/lib/types';
+import { trackGuideItemExpanded, trackGuideItemComplete } from '@/lib/analytics';
 
 interface GuideItemProps {
   item: GuideItem;
@@ -51,6 +52,9 @@ export function GuideItemComponent({
   const handleComplete = (value: boolean) => {
     setCompleted(value);
     onComplete?.(value);
+    if (value) {
+      trackGuideItemComplete(item.id, item.title);
+    }
   };
 
   return (
@@ -165,7 +169,13 @@ export function GuideItemComponent({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => {
+            const newExpanded = !expanded;
+            setExpanded(newExpanded);
+            if (newExpanded) {
+              trackGuideItemExpanded(item.id, item.title);
+            }
+          }}
           className="w-full justify-center text-base"
           aria-expanded={expanded}
           aria-controls={`guide-details-${item.id}`}

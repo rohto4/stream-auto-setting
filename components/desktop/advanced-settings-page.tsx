@@ -13,6 +13,7 @@ import { PreviewPanel } from './preview-panel';
 import { EffectDescription } from './effect-description';
 import type { AdvancedSettingsAnswers, ObsConfig, GpuDetectionResult, SpeedTestResult, GenreId, GuideSuggestion } from '@/lib/types';
 import { calculateAdvancedSettings } from '@/lib/advanced-settings-calculator';
+import { trackAdvancedSettingsComplete } from '@/lib/analytics';
 
 interface AdvancedSettingsPageProps {
   genre: GenreId;
@@ -174,7 +175,14 @@ export function AdvancedSettingsPage({
             元の自動設定に戻す
           </Button>
           <Button
-            onClick={() => onGenerate(currentConfig, guideUpdates)}
+            onClick={() => {
+              trackAdvancedSettingsComplete(
+                answers.performancePriority,
+                answers.persona,
+                answers.audioConcerns
+              );
+              onGenerate(currentConfig, guideUpdates);
+            }}
             className="flex-1 text-lg py-6"
             size="lg"
           >

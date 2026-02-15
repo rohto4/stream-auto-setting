@@ -16,6 +16,7 @@ import {
   trackGenreSelect,
   trackConfigGenerationStart,
   trackGuideViewed,
+  trackConfigDownload,
 } from '@/lib/analytics';
 
 // 動的インポート: 初期ロードから除外してパフォーマンス向上
@@ -163,7 +164,10 @@ export function DesktopView() {
       if (!response.ok) throw new Error('Config generation failed');
       
       await processApiResponse(response);
-      
+
+      // Analytics: 設定ダウンロード完了
+      trackConfigDownload(genre, gpuResult.mapping.gpuName, speedResult.uploadMbps);
+
       setStep('complete');
       toast.success('設定ファイルをダウンロードしました');
     } catch (error) {
@@ -192,6 +196,9 @@ export function DesktopView() {
       if (!response.ok) throw new Error('Config generation failed');
 
       await processApiResponse(response);
+
+      // Analytics: 設定ダウンロード完了
+      trackConfigDownload(genre, gpuResult.mapping.gpuName, speedResult.uploadMbps);
 
       setStep('complete');
       toast.success('カスタム設定ファイルをダウンロードしました');

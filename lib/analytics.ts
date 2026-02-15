@@ -97,17 +97,13 @@ export function trackSpeedTestFailed(reason: string) {
  */
 export function trackConfigConfirmReached(
   genre: string,
-  encoder: string,
-  bitrate: number,
-  resolution: string,
-  fps: number
+  gpuName: string,
+  uploadMbps: number
 ) {
   sendEvent('config_confirm_reached', {
     genre,
-    encoder,
-    bitrate,
-    resolution,
-    fps,
+    gpu_name: gpuName,
+    upload_mbps: Math.round(uploadMbps * 10) / 10,
   });
 }
 
@@ -121,17 +117,15 @@ export function trackAdvancedSettingsStart() {
 /**
  * 詳細設定完了イベント
  */
-export function trackAdvancedSettingsComplete(answers: {
-  viewerDevice: string;
-  streamDuration: string;
-  connectionType: string;
-  recordingPreference: string;
-}) {
+export function trackAdvancedSettingsComplete(
+  performancePriority: string,
+  persona: string,
+  audioConcerns: string[]
+) {
   sendEvent('advanced_settings_complete', {
-    viewer_device: answers.viewerDevice,
-    stream_duration: answers.streamDuration,
-    connection_type: answers.connectionType,
-    recording_preference: answers.recordingPreference,
+    performance_priority: performancePriority,
+    persona,
+    audio_concerns: audioConcerns.join(','),
   });
 }
 
@@ -147,15 +141,13 @@ export function trackConfigGenerationStart() {
  */
 export function trackConfigDownload(
   genre: string,
-  encoder: string,
-  bitrate: number,
-  useAdvancedSettings: boolean
+  gpuName: string,
+  uploadMbps: number
 ) {
   sendEvent('config_download', {
     genre,
-    encoder,
-    bitrate,
-    use_advanced_settings: useAdvancedSettings,
+    gpu_name: gpuName,
+    upload_mbps: Math.round(uploadMbps * 10) / 10,
   });
 }
 
@@ -169,12 +161,22 @@ export function trackGuideViewed(category: 'required' | 'performance' | 'optiona
 }
 
 /**
+ * ガイド項目展開イベント
+ */
+export function trackGuideItemExpanded(itemId: string, title: string) {
+  sendEvent('guide_item_expanded', {
+    item_id: itemId,
+    title,
+  });
+}
+
+/**
  * ガイド項目完了イベント
  */
-export function trackGuideItemComplete(itemId: string, category: string) {
+export function trackGuideItemComplete(itemId: string, title: string) {
   sendEvent('guide_item_complete', {
     item_id: itemId,
-    category,
+    title,
   });
 }
 
