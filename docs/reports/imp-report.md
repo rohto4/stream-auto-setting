@@ -397,10 +397,59 @@ Alpha リリース前にパフォーマンスを最適化し、Lighthouse スコ
 #### 既知の制限事項
 なし
 
+**Phase 6.1.5: Lighthouse CI 導入**（完了）
+- **Commit:** `4047670` - perf: add Lighthouse CI and Vercel Analytics
+
+1. **Lighthouse CI インストール・設定**
+   - `@lhci/cli` インストール
+   - `lighthouserc.json` 作成（パフォーマンス閾値95+）
+   - npm scripts追加（`lighthouse`, `lighthouse:mobile`）
+
+2. **GitHub Actions ワークフロー**
+   - `.github/workflows/lighthouse.yml` 作成
+   - 自動テスト設定（push/PR時）
+   - 3回実行で精度向上
+   - アーティファクトアップロード
+
+**Phase 6.1.6: Vercel Analytics 導入**（完了）
+- **Commit:** `4047670` - perf: add Lighthouse CI and Vercel Analytics
+
+1. **Vercel Analytics インストール**
+   - `@vercel/analytics` インストール
+   - layout.tsx に `<Analytics />` 追加
+
+2. **Real User Monitoring (RUM)**
+   - 自動 Web Vitals 収集
+   - LCP, FID, CLS 自動測定
+   - 本番環境でのパフォーマンス監視
+
+#### テスト結果（Phase 6.1 総合）
+- ✅ ビルド成功（全3回）
+- ✅ TypeScript エラー 0件
+- ✅ **First Load JS: 78.2 KB → 56.3 KB（-21.9 KB、-28%削減）**
+- ✅ **目標（< 70 KB）大幅達成**
+- ✅ Lighthouse CI 自動テスト設定完了
+- ✅ Vercel Analytics 統合完了
+
+#### 成果物（Phase 6.1 総合）
+- ✅ 動的インポート実装（5コンポーネント）
+- ✅ 最適化されたキャッシュ戦略
+- ✅ Lighthouse CI 自動化
+- ✅ Real User Monitoring 有効化
+- ✅ パフォーマンス大幅改善
+
+#### Phase 6.1 完了チェックリスト
+- ✅ next/font 導入（preload設定）
+- ✅ 動的インポート実装
+- ✅ キャッシュ戦略最適化
+- ✅ Lighthouse CI 導入
+- ✅ Vercel Analytics 導入
+- ✅ First Load JS < 70 KB 達成（56.3 KB）
+
 #### 次のタスクへの影響
-- Phase 6.1.5: Lighthouse CI 導入（次のセッション）
-- Phase 6.1.6: Vercel Analytics 導入（次のセッション）
+- **Phase 6.1 完全完了！**
 - Phase 6.2: ビジュアル強化（OBSスクリーンショット）へ進む準備完了
+- Phase 6.3以降: 機能追加、Analytics強化へ
 
 ---
 
