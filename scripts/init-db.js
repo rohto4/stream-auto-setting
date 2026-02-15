@@ -96,7 +96,7 @@ console.log('✅ genre_configs table created');
 console.log('📊 Inserting GPU mappings data...');
 
 const gpuMappings = `
--- NVIDIA RTX 50シリーズ Blackwell
+-- NVIDIA RTX 50シリーズ Blackwell（デスクトップ）
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5090', 'nvidia', 'ffmpeg_nvenc', 'p4', 15000, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5080 Super', 'nvidia', 'ffmpeg_nvenc', 'p4', 13000, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5080', 'nvidia', 'ffmpeg_nvenc', 'p4', 12000, 1, 1, 1);
@@ -105,7 +105,13 @@ INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5070 Ti', 'nvidia
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5070 Super', 'nvidia', 'ffmpeg_nvenc', 'p5', 9500, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5070', 'nvidia', 'ffmpeg_nvenc', 'p5', 9000, 1, 1, 1);
 
--- NVIDIA RTX 40シリーズ Ada Lovelace
+-- NVIDIA RTX 50シリーズ Blackwell（ノートPC版 - ビットレート80%制限）
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5090 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p5', 12000, 1, 1, 1);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5080 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p5', 9600, 1, 1, 1);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5070 Ti Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p5', 8000, 1, 1, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 5070 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 7200, 1, 1, 2);
+
+-- NVIDIA RTX 40シリーズ Ada Lovelace（デスクトップ）
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4090 D', 'nvidia', 'ffmpeg_nvenc', 'p4', 12000, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4090', 'nvidia', 'ffmpeg_nvenc', 'p4', 12000, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4080 Super', 'nvidia', 'ffmpeg_nvenc', 'p4', 10500, 1, 1, 1);
@@ -117,7 +123,14 @@ INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4070', 'nvidia', 
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4060 Ti', 'nvidia', 'ffmpeg_nvenc', 'p5', 8500, 1, 0, 2);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4060', 'nvidia', 'ffmpeg_nvenc', 'p5', 8000, 1, 0, 2);
 
--- NVIDIA RTX 30シリーズ Ampere
+-- NVIDIA RTX 40シリーズ Ada Lovelace（ノートPC版 - ビットレート80%制限）
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4090 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p5', 9600, 1, 1, 1);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4080 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p5', 8000, 1, 1, 1);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4070 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 7200, 1, 1, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4060 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 6400, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 4050 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 5500, 1, 0, 3);
+
+-- NVIDIA RTX 30シリーズ Ampere（デスクトップ）
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3090 Ti', 'nvidia', 'ffmpeg_nvenc', 'p5', 10000, 1, 0, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3090', 'nvidia', 'ffmpeg_nvenc', 'p5', 9000, 1, 0, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3080 Ti', 'nvidia', 'ffmpeg_nvenc', 'p5', 9500, 1, 0, 1);
@@ -127,20 +140,38 @@ INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3070', 'nvidia', 
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3060 Ti', 'nvidia', 'ffmpeg_nvenc', 'p6', 7500, 1, 0, 2);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3060', 'nvidia', 'ffmpeg_nvenc', 'p6', 7000, 1, 0, 2);
 
+-- NVIDIA RTX 30シリーズ Ampere（ノートPC版 - ビットレート80%制限）
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3080 Ti Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 7600, 1, 0, 1);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3080 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 7200, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3070 Ti Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 6800, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3070 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p6', 6400, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3060 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p7', 5600, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3050 Ti Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p7', 5000, 1, 0, 3);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce RTX 3050 Laptop GPU', 'nvidia', 'ffmpeg_nvenc', 'p7', 4500, 1, 0, 3);
+
 -- NVIDIA GTX 16シリーズ
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce GTX 1660 Ti', 'nvidia', 'ffmpeg_nvenc', 'p6', 6500, 0, 0, 3);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce GTX 1660', 'nvidia', 'ffmpeg_nvenc', 'p6', 6000, 0, 0, 3);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce GTX 1650 Super', 'nvidia', 'ffmpeg_nvenc', 'p7', 5500, 0, 0, 3);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('NVIDIA GeForce GTX 1650', 'nvidia', 'ffmpeg_nvenc', 'p7', 5000, 0, 0, 3);
 
--- AMD RX 8000シリーズ RDNA 4
+-- AMD RX 8000シリーズ RDNA 4（デスクトップ）
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 8800 XT', 'amd', 'ffmpeg_amf', 'speed', 10000, 1, 1, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 8700 XT', 'amd', 'ffmpeg_amf', 'speed', 9000, 1, 1, 2);
 
--- AMD RX 7000シリーズ RDNA 3
+-- AMD RX 8000Mシリーズ RDNA 4（ノートPC版 - ビットレート80%制限）
+INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 8800M', 'amd', 'ffmpeg_amf', 'speed', 8000, 1, 1, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 8700M', 'amd', 'ffmpeg_amf', 'balanced', 7200, 1, 1, 2);
+
+-- AMD RX 7000シリーズ RDNA 3（デスクトップ）
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7900 XTX', 'amd', 'ffmpeg_amf', 'speed', 10000, 1, 0, 1);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7800 XT', 'amd', 'ffmpeg_amf', 'speed', 9000, 1, 0, 2);
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7700 XT', 'amd', 'ffmpeg_amf', 'balanced', 8000, 1, 0, 2);
+
+-- AMD RX 7000Mシリーズ RDNA 3（ノートPC版 - ビットレート80%制限）
+INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7900M', 'amd', 'ffmpeg_amf', 'speed', 8000, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7700S', 'amd', 'ffmpeg_amf', 'balanced', 6400, 1, 0, 2);
+INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 7600M XT', 'amd', 'ffmpeg_amf', 'balanced', 6000, 1, 0, 3);
 
 -- AMD RX 6000シリーズ RDNA 2
 INSERT OR IGNORE INTO gpu_mappings VALUES ('AMD Radeon RX 6900 XT', 'amd', 'ffmpeg_amf', 'balanced', 8000, 0, 0, 2);

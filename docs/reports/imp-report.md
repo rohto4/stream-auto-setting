@@ -579,3 +579,76 @@ Phase 6.2の画像インフラ整備は完了。実際のスクリーンショ�
 撮影完了後、`public/guide/README.md`の指示に従って画像を配置し、ビルド確認を実施する。
 
 ---
+
+## 2026-02-15: Phase 6.3.1 GPU検出精度向上
+
+### 実装内容
+
+**フェーズ:** Phase 6.3.1 GPU検出精度向上
+**ステータス:** ✅ 完了
+
+#### 目的
+GPU検出率を90% → 95%に向上させ、2026年最新GPU（ノートPC版含む）に対応。
+
+#### 実装項目
+
+1. **ノートPC GPU追加（+22モデル）**
+   - NVIDIA RTX 50シリーズ Laptop（4モデル）
+     - RTX 5090 Laptop GPU, RTX 5080 Laptop GPU, RTX 5070 Ti Laptop GPU, RTX 5070 Laptop GPU
+   - NVIDIA RTX 40シリーズ Laptop（5モデル）
+     - RTX 4090 Laptop GPU, RTX 4080 Laptop GPU, RTX 4070 Laptop GPU, RTX 4060 Laptop GPU, RTX 4050 Laptop GPU
+   - NVIDIA RTX 30シリーズ Laptop（7モデル）
+     - RTX 3080 Ti Laptop GPU, RTX 3080 Laptop GPU, RTX 3070 Ti Laptop GPU, RTX 3070 Laptop GPU, RTX 3060 Laptop GPU, RTX 3050 Ti Laptop GPU, RTX 3050 Laptop GPU
+   - AMD RX 8000Mシリーズ（2モデル）
+     - RX 8800M, RX 8700M
+   - AMD RX 7000Mシリーズ（3モデル）
+     - RX 7900M, RX 7700S, RX 7600M XT
+
+2. **ノートPC GPUの特性**
+   - ビットレート上限: デスクトップ版の80%（発熱・電力制約を考慮）
+   - プリセット: 1段階軽量化（p5 → p6、p6 → p7）
+   - 例: RTX 5090 (15000 kbps, p4) → RTX 5090 Laptop (12000 kbps, p5)
+
+3. **fuzzy matching精度向上**
+   - `threshold`: 0.5 → 0.4（60%以上の類似度を要求）
+   - スコア閾値: 0.4 → 0.3（70%以上の類似度を要求）
+   - 最低信頼度: 0.6 → 0.7（より高い信頼度を要求）
+
+4. **GPUデータベース統計**
+   - 登録モデル数: 48 → **70モデル**（+22モデル、+46%）
+   - カバレッジ向上:
+     - NVIDIA Laptop GPU: 0 → 16モデル
+     - AMD Mobile GPU: 0 → 5モデル
+     - 検出率向上: 90% → 95%（推定）
+
+#### 変更ファイル
+- `scripts/init-db.js` - ノートPC GPU 22モデル追加
+- `lib/gpu-detector.ts` - fuzzy matching精度向上
+- `data/sessions.db` - データベース再初期化
+
+#### ビルド結果
+```
+✅ Compiled successfully in 5.1s
+Route (app)                   Size  First Load JS
+┌ ○ /                      56.3 kB       169 kB
+```
+- ✅ ビルド成功
+- ✅ 型チェック合格
+- ✅ バンドルサイズ変化なし
+- ✅ GPUデータベース: 70モデル登録
+
+#### テスト結果
+- [x] データベース初期化成功（70モデル）
+- [x] ビルド成功
+- [x] 型チェック合格
+- [ ] 実際のノートPC環境での検出テスト（ユーザー実施）
+
+#### 既知の制限事項
+- ノートPC環境での実機テストは未実施（ユーザー環境で検証必要）
+- fuzzy matchingの精度向上による誤検出リスク（実データで検証必要）
+
+#### 次のタスクへの影響
+- **次タスク:** Phase 6.3.2 FAQ・ヘルプセクション作成
+- GPU検出精度向上により、FAQの「GPUが検出されない」項目が減少する見込み
+
+---

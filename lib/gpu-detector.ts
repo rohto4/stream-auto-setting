@@ -231,7 +231,7 @@ export function findGpuMapping(
   // 3. あいまい検索（Fuse.js使用）
   const fuse = new Fuse(allMappings, {
     keys: ['gpuName'],
-    threshold: 0.5, // さらに緩く（50%以上の類似度）
+    threshold: 0.4, // 厳密化: 60%以上の類似度を要求（Phase 6.3.1）
     includeScore: true,
     minMatchCharLength: 4,
   });
@@ -242,10 +242,11 @@ export function findGpuMapping(
     const bestMatch = fuzzyResults[0];
     console.log(`  🔎 Fuzzy match: ${bestMatch.item.gpuName} (score: ${bestMatch.score})`);
 
-    if (bestMatch.score! < 0.4) {
+    // スコア閾値を厳密化: 0.3未満（= 70%以上の類似度）を要求（Phase 6.3.1）
+    if (bestMatch.score! < 0.3) {
       return {
         mapping: bestMatch.item,
-        confidence: Math.max(0.6, 1 - bestMatch.score! * 1.5),
+        confidence: Math.max(0.7, 1 - bestMatch.score! * 1.5), // 最低信頼度 0.7（Phase 6.3.1）
       };
     }
   }
