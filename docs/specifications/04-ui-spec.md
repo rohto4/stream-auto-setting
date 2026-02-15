@@ -1,8 +1,12 @@
 # UI/UX仕様書
 **Project:** オートOBS設定
-**Version:** 2.0.0
-**Last Updated:** 2026-02-14
+**Version:** 2.1.0
+**Last Updated:** 2026-02-15
 **Design Principle:** ユーザーを手放さない、迷わせない、待たせない
+
+**変更履歴:**
+- v2.1.0 (2026-02-15): Phase 6.2 画像インフラ整備（GuideItemImage型追加、next/image対応）
+- v2.0.0 (2026-02-14): UIリデザイン（カラーシステム、アイコンシステム、カスタムUI）
 
 ---
 
@@ -1145,6 +1149,15 @@ basic.ini/service.jsonでは設定できない項目を、初心者向けに画�
 ### 8.3 コンポーネント設計
 
 ```typescript
+// GuideItemImage型定義（Phase 6.2追加）
+interface GuideItemImage {
+  src: string;          // 画像パス（/guide/配下）
+  alt: string;          // 代替テキスト
+  width: number;        // 元画像の幅
+  height: number;       // 元画像の高さ
+  blurDataURL?: string; // Blur placeholder（オプション）
+}
+
 // GuideItem型定義
 interface GuideItem {
   id: string;
@@ -1155,9 +1168,9 @@ interface GuideItem {
   impactDescription?: string;
   description: string;
   steps: string[];
-  imageUrl?: string;
-  imagePlaceholder?: string; // ASCII図など
-  estimatedTime?: number; // 秒
+  image?: GuideItemImage;      // next/image用画像データ（Phase 6.2）
+  imagePlaceholder?: string;   // ASCII図など（フォールバック）
+  estimatedTime?: number;      // 秒
 }
 
 // GuideProgress型定義

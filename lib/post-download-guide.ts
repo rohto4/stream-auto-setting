@@ -23,6 +23,12 @@ export const staticGuideItems: GuideItem[] = [
       'OBS > 設定 > 配信 > 「ストリームキー」に貼り付け',
       '「OK」をクリック',
     ],
+    image: {
+      src: '/guide/required/youtube-stream-key.webp',
+      alt: 'YouTube配信キー設定画面（OBSの設定 > 配信）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 120,
   },
   {
@@ -41,6 +47,12 @@ export const staticGuideItems: GuideItem[] = [
       'OBSメイン画面の音声ミキサーでレベルを確認',
       '声を出してメーターが動くことを確認',
     ],
+    image: {
+      src: '/guide/required/microphone-setup.webp',
+      alt: 'マイク音声設定画面（OBSの設定 > 音声）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 60,
   },
   {
@@ -61,6 +73,12 @@ export const staticGuideItems: GuideItem[] = [
       'ゲームを起動してウィンドウを選択',
       '「OK」をクリック',
     ],
+    image: {
+      src: '/guide/required/game-capture.webp',
+      alt: 'ゲームキャプチャ設定画面（ゲームキャプチャのプロパティ）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 180,
   },
 
@@ -78,6 +96,12 @@ export const staticGuideItems: GuideItem[] = [
       'OBSのプレビュー画面を右クリック',
       '「プレビューを有効化」のチェックを外す',
     ],
+    image: {
+      src: '/guide/performance/disable-preview.webp',
+      alt: 'プレビュー画面の無効化（右クリックメニュー）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 10,
   },
   {
@@ -94,6 +118,12 @@ export const staticGuideItems: GuideItem[] = [
       '「プロセス優先度」を「高」に設定',
       '「OK」をクリック',
     ],
+    image: {
+      src: '/guide/performance/process-priority.webp',
+      alt: 'プロセス優先度設定画面（OBSの設定 > 詳細設定）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 30,
   },
   {
@@ -111,6 +141,12 @@ export const staticGuideItems: GuideItem[] = [
       '「録画を有効にする」のチェックを外す',
       '「OK」をクリック',
     ],
+    image: {
+      src: '/guide/performance/disable-recording.webp',
+      alt: '録画設定画面（OBSの設定 > 出力 > 録画）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 30,
   },
 
@@ -130,6 +166,12 @@ export const staticGuideItems: GuideItem[] = [
       'または「詳細」でレート制御を「CBR」に設定（上級者向け）',
       '「OK」をクリック',
     ],
+    image: {
+      src: '/guide/performance/output-mode.webp',
+      alt: '出力モード設定画面（OBSの設定 > 出力）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 60,
   },
   {
@@ -146,6 +188,12 @@ export const staticGuideItems: GuideItem[] = [
       '「ゲーム」をクリック',
       '「ゲームモード」をONにする',
     ],
+    image: {
+      src: '/guide/optional/windows-game-mode.webp',
+      alt: 'Windowsゲームモード設定画面（Windows設定 > ゲーム）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 30,
   },
   {
@@ -163,6 +211,12 @@ export const staticGuideItems: GuideItem[] = [
       '「OK」をクリック',
       'OBSを再起動',
     ],
+    image: {
+      src: '/guide/optional/browser-hw-accel.webp',
+      alt: 'ブラウザのハードウェアアクセラレーション設定（OBSの設定 > 詳細設定）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 45,
   },
   {
@@ -180,6 +234,12 @@ export const staticGuideItems: GuideItem[] = [
       'マイクの「音声モニタリング」を「モニターと出力」に設定',
       '「閉じる」をクリック',
     ],
+    image: {
+      src: '/guide/optional/audio-monitoring.webp',
+      alt: '音声モニタリング設定画面（オーディオの詳細プロパティ）',
+      width: 800,
+      height: 450,
+    },
     estimatedTime: 45,
   },
 ];

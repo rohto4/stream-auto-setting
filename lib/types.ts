@@ -161,6 +161,14 @@ export type GuideCategory =
 
 export type PerformanceImpact = 'high' | 'medium' | 'low' | 'none';
 
+export interface GuideItemImage {
+  src: string; // 画像パス（/guide/配下）
+  alt: string; // 代替テキスト
+  width: number; // 元画像の幅
+  height: number; // 元画像の高さ
+  blurDataURL?: string; // Blur placeholder（オプション）
+}
+
 export interface GuideItem {
   id: string;
   title: string;
@@ -170,8 +178,8 @@ export interface GuideItem {
   impactDescription?: string; // 例: "CPU -10-15%"
   description: string;
   steps: string[]; // 手順のリスト
-  imageUrl?: string; // 画像URL（将来実装）
-  imagePlaceholder?: string; // 画像の代替テキスト（ASCII図など）
+  image?: GuideItemImage; // next/image用の画像データ（Phase 6.2）
+  imagePlaceholder?: string; // 画像の代替テキスト（ASCII図など、フォールバック用）
   estimatedTime?: number; // 設定にかかる推定時間（秒）
   completed?: boolean; // ユーザーが完了マークを付けたか
 }

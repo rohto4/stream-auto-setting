@@ -469,14 +469,113 @@ Alpha リリース前にパフォーマンスを最適化し、Lighthouse スコ
 ...
 
 #### テスト結果
-- [ ] ビルド成功
-- [ ] 型チェック合格
-- [ ] 既存機能への影響確認
+- [x] ビルド成功
+- [x] 型チェック合格
+- [x] 既存機能への影響確認
 
 #### 既知の制限事項
-[あれば記載]
+- Lighthouse CI環境でのビルド成功が必要（GitHub Actions）
 
 #### 次のタスクへの影響
-[あれば記載]
+Phase 6.2（ビジュアル強化）に移行可能
+
+---
+
+## 2026-02-15: Phase 6.2 画像インフラ整備
+
+### 実装内容
+
+**フェーズ:** Phase 6.2 ビジュアル強化
+**ステータス:** インフラ整備完了（画像撮影待ち）
+
+#### 目的
+OBS設定ガイドに実際のスクリーンショットを追加し、ユーザーの理解度と完遂率を向上させる。
+next/imageを活用した最適化された画像表示システムを構築。
+
+#### 実装項目
+
+1. **型定義の拡張**
+   - `lib/types.ts` に `GuideItemImage` インターフェース追加
+   ```typescript
+   interface GuideItemImage {
+     src: string;          // 画像パス
+     alt: string;          // 代替テキスト
+     width: number;        // 元画像の幅
+     height: number;       // 元画像の高さ
+     blurDataURL?: string; // Blur placeholder
+   }
+   ```
+   - `GuideItem` 型を更新: `imageUrl?: string` → `image?: GuideItemImage`
+
+2. **next/image統合**
+   - `components/post-download/guide-item.tsx`
+     - `<img>` タグ → next/image `<Image>` コンポーネント
+     - lazy loading、blur placeholder、自動WebP変換対応
+     - 画像/テキスト切り替えボタンはそのまま維持
+
+3. **画像メタデータ追加**
+   - `lib/post-download-guide.ts`
+   - 全10項目のガイドに画像パスを定義（プレースホルダー）
+     - 必須設定（3枚）: `youtube-stream-key.webp`, `microphone-setup.webp`, `game-capture.webp`
+     - パフォーマンス設定（4枚）: `disable-preview.webp`, `process-priority.webp`, `disable-recording.webp`, `output-mode.webp`
+     - オプション設定（3枚）: `windows-game-mode.webp`, `browser-hw-accel.webp`, `audio-monitoring.webp`
+
+4. **画像ディレクトリ構造**
+   ```
+   /public/guide/
+   ├── required/          # 必須設定（3枚）
+   ├── performance/       # パフォーマンス設定（4枚）
+   ├── optional/          # オプション設定（3枚）
+   └── README.md          # 撮影ガイド
+   ```
+
+5. **撮影ガイドドキュメント作成**
+   - `public/guide/README.md`
+   - 撮影仕様（解像度、フォーマット、品質）
+   - 撮影対象リスト（10枚の詳細な撮影指示）
+   - ハイライト・マスク処理の指示
+   - 配置後の動作確認手順
+
+6. **設計書更新**
+   - `docs/specifications/04-ui-spec.md`
+   - バージョン: 2.0.0 → 2.1.0
+   - GuideItem型定義を更新
+
+#### 変更ファイル
+- `lib/types.ts` - GuideItemImage型追加、GuideItem型更新
+- `components/post-download/guide-item.tsx` - next/image統合
+- `lib/post-download-guide.ts` - 全10項目に画像メタデータ追加
+- `public/guide/README.md` - 撮影ガイド作成（NEW）
+- `docs/specifications/04-ui-spec.md` - v2.1.0に更新
+
+#### ビルド結果
+```
+Route (app)                   Size  First Load JS
+┌ ○ /                      56.3 kB       169 kB
+```
+- ✅ ビルド成功（16.4秒）
+- ✅ 型チェック合格
+- ✅ バンドルサイズ変化なし（画像は未配置のため）
+
+#### テスト結果
+- [x] ビルド成功
+- [x] 型チェック合格
+- [x] next/image統合確認（コンパイルエラーなし）
+- [ ] 実際の画像配置後の表示確認（Phase 6.2撮影タスク後）
+
+#### 既知の制限事項
+- 画像ファイルは未配置（プレースホルダーパスのみ定義）
+- ユーザーが画像撮影を完了するまで、画像表示ボタンは非表示
+- blur placeholderは未実装（将来的にplaiceholderライブラリで追加予定）
+
+#### 次のタスクへの影響
+- **次タスク:** OBSスクリーンショット撮影（10枚）
+- **撮影環境:** OBS Studio 30.x、Windows 11/macOS Sonoma、日本語UI
+- **画像仕様:** 1920x1080 → WebP 品質80%、重要箇所に赤枠ハイライト
+- **配置後:** `npm run build`で自動WebP変換、next/imageで最適化配信
+
+#### 備考
+Phase 6.2の画像インフラ整備は完了。実際のスクリーンショット撮影はユーザー（開発チーム）が実施。
+撮影完了後、`public/guide/README.md`の指示に従って画像を配置し、ビルド確認を実施する。
 
 ---

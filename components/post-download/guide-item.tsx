@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -107,9 +108,9 @@ export function GuideItemComponent({
           </div>
 
           {/* 画像/テキストボタン */}
-          {(item.imageUrl || item.imagePlaceholder) && (
+          {(item.image || item.imagePlaceholder) && (
             <div className="flex gap-2 pt-4">
-              {item.imageUrl && (
+              {item.image && (
                 <Button
                   variant={showImage ? 'default' : 'outline'}
                   size="sm"
@@ -132,13 +133,18 @@ export function GuideItemComponent({
             </div>
           )}
 
-          {/* 画像表示 */}
-          {showImage && item.imageUrl && (
+          {/* 画像表示（next/image） */}
+          {showImage && item.image && (
             <div className="mt-4 p-4 bg-muted rounded-lg">
-              <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="w-full max-w-2xl"
+              <Image
+                src={item.image.src}
+                alt={item.image.alt}
+                width={item.image.width}
+                height={item.image.height}
+                className="w-full max-w-2xl rounded-lg border border-border"
+                placeholder={item.image.blurDataURL ? 'blur' : 'empty'}
+                blurDataURL={item.image.blurDataURL}
+                loading="lazy"
               />
             </div>
           )}
