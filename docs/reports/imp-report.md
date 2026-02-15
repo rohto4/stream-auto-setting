@@ -736,3 +736,96 @@ Route (app)                   Size  First Load JS
 - FAQによりユーザーサポート負荷が軽減される見込み
 
 ---
+
+## 2026-02-15: Phase 6.4.2 カスタムイベント追加（GA4）
+
+### 実装内容
+
+**フェーズ:** Phase 6.4.2 カスタムイベント追加（Google Analytics 4）
+**ステータス:** ✅ 完了
+
+#### 目的
+ユーザー行動を詳細に追跡し、データドリブンな改善を可能にする。
+
+#### 実装項目
+
+1. **Analyticsライブラリ作成（lib/analytics.ts）**
+   - 20種類のカスタムイベント関数を実装
+   - 型安全なイベント送信関数
+   - コンソールログ出力（開発時のデバッグ用）
+
+2. **実装イベント一覧**
+   - **ユーザーフロー:**
+     - `genre_select` - ジャンル選択
+     - `gpu_detected` - GPU検出成功（GPU名、ベンダー、信頼度、ノートPC判定）
+     - `gpu_detection_failed` - GPU検出失敗（理由）
+     - `speed_test_start` - 速度測定開始
+     - `speed_test_complete` - 速度測定完了（上り速度、Tier、所要時間）
+     - `speed_test_failed` - 速度測定失敗（理由）
+     - `config_confirm_reached` - 設定確認画面到達（ジャンル、エンコーダー、ビットレート、解像度、FPS）
+     - `config_generation_start` - 設定ファイル生成開始
+     - `config_download` - 設定ファイルダウンロード（ジャンル、エンコーダー、ビットレート、詳細設定使用有無）
+   - **詳細設定:**
+     - `advanced_settings_start` - 詳細設定開始
+     - `advanced_settings_complete` - 詳細設定完了（4つの回答）
+   - **ガイド:**
+     - `guide_viewed` - ガイド閲覧（カテゴリー）
+     - `guide_item_complete` - ガイド項目完了（項目ID、カテゴリー）
+     - `guide_complete` - ガイド完了（必須/パフォーマンス/任意の完了数）
+   - **FAQ:**
+     - `faq_viewed` - FAQページ閲覧
+     - `faq_search` - FAQ検索（クエリ、検索結果数）
+     - `faq_category_filter` - FAQカテゴリーフィルター（カテゴリー）
+     - `faq_item_expanded` - FAQ項目展開（項目ID、質問文）
+   - **エラー・離脱:**
+     - `error_occurred` - エラー発生（タイプ、メッセージ、ステップ）
+     - `user_abandon` - ユーザー離脱（ステップ、滞在時間）
+
+3. **コンポーネント統合**
+   - `components/desktop/desktop-view.tsx` - ジャンル選択、設定生成開始
+   - `app/faq/page.tsx` - FAQ閲覧、検索、カテゴリーフィルター、項目展開
+
+4. **今後の統合予定**
+   - `components/desktop/gpu-detector.tsx` - GPU検出成功/失敗
+   - `components/desktop/speed-tester.tsx` - 速度測定開始/完了/失敗
+   - `components/desktop/config-confirm.tsx` - 設定確認画面到達
+   - `components/desktop/advanced-settings-page.tsx` - 詳細設定開始/完了
+   - `components/post-download/guide-*.tsx` - ガイド閲覧、項目完了
+
+#### 変更ファイル
+- `lib/analytics.ts` - Analyticsライブラリ（NEW、20イベント関数）
+- `components/desktop/desktop-view.tsx` - ジャンル選択、生成開始イベント追加
+- `app/faq/page.tsx` - FAQ関連イベント追加（閲覧、検索、フィルター、展開）
+
+#### ビルド結果
+```
+✅ Compiled successfully in 6.6s
+Route (app)                   Size  First Load JS
+┌ ○ /                      49.3 kB       170 kB  (+0.3 KB)
+└ ○ /faq                     20 kB       131 kB  (+0.3 KB)
+```
+- ✅ ビルド成功
+- ✅ バンドルサイズ微増（+0.3 KB、Analytics追加の影響）
+- ✅ 型チェック合格
+
+#### テスト結果
+- [x] ビルド成功
+- [x] 型チェック合格
+- [ ] 実際のGA4イベント送信確認（デプロイ後、NEXT_PUBLIC_GA_ID設定後）
+
+#### 既知の制限事項
+- GA_IDが未設定の場合、イベントは送信されない（コンソールログのみ）
+- 一部イベントはコンポーネント統合が未完（GPU検出、速度測定など）- 今後のリリースで順次追加予定
+
+#### 次のタスクへの影響
+- **次タスク:** 残りのコンポーネントへのAnalytics統合
+- デプロイ後、ユーザー行動データを収集してファネル分析が可能になる
+
+#### 期待される効果
+- ユーザー離脱ポイントの特定
+- GPU検出成功率の測定
+- 速度測定所要時間の分析
+- FAQ利用状況の把握
+- データドリブンなUX改善の基盤構築
+
+---

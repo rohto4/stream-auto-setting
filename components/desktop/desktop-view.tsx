@@ -12,6 +12,11 @@ import { ConfigConfirm } from './config-confirm';
 import { toast } from 'sonner';
 import type { GpuDetectionResult, SpeedTestResult, GenreId, ObsConfig, GuideSuggestion, GuideItem } from '@/lib/types';
 import { findGenreById } from '@/lib/db/queries';
+import {
+  trackGenreSelect,
+  trackConfigGenerationStart,
+  trackGuideViewed,
+} from '@/lib/analytics';
 
 // 動的インポート: 初期ロードから除外してパフォーマンス向上
 const AdvancedSettingsPage = dynamic(() => import('./advanced-settings-page').then(mod => mod.AdvancedSettingsPage), {
@@ -136,12 +141,19 @@ export function DesktopView() {
     setGenre(selectedGenre);
     setStep('detect-gpu');
     toast.success('ジャンルを選択しました');
+
+    // Analytics
+    trackGenreSelect(selectedGenre);
   }
 
   async function handleGenerate() {
     if (!gpuResult || !speedResult || !genre || generating) return;
     setGenerating(true);
     setStep('generate');
+
+    // Analytics
+    trackConfigGenerationStart();
+
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -167,6 +179,10 @@ export function DesktopView() {
     if (!gpuResult || !speedResult || !genre || generating) return;
     setGenerating(true);
     setStep('generate');
+
+    // Analytics
+    trackConfigGenerationStart();
+
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',

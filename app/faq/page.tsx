@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import {
   Accordion,
@@ -23,10 +23,21 @@ import {
   searchFaq,
   type FaqCategory,
 } from '@/lib/faq-data';
+import {
+  trackFaqViewed,
+  trackFaqSearch,
+  trackFaqCategoryFilter,
+  trackFaqItemExpanded,
+} from '@/lib/analytics';
 
 export default function FaqPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<FaqCategory | 'all'>('all');
+
+  // ページ閲覧イベント
+  useEffect(() => {
+    trackFaqViewed();
+  }, []);
 
   // 検索とフィルタリング
   const filteredFaqs = searchQuery
@@ -34,6 +45,21 @@ export default function FaqPage() {
     : selectedCategory === 'all'
     ? faqItems
     : faqItems.filter((item) => item.category === selectedCategory);
+
+  // 検索イベント
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query) {
+      const results = searchFaq(query);
+      trackFaqSearch(query, results.length);
+    }
+  };
+
+  // カテゴリーフィルターイベント
+  const handleCategoryFilter = (category: FaqCategory | 'all') => {
+    setSelectedCategory(category);
+    trackFaqCategoryFilter(category);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -60,7 +86,7 @@ export default function FaqPage() {
               type="text"
               placeholder="質問を検索... (例: GPUが検出されない)"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               className="pl-10 text-base"
             />
           </div>
@@ -71,7 +97,7 @@ export default function FaqPage() {
           <Button
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setSelectedCategory('all')}
+            onClick={() => handleCategoryFilter('all')}
             className="text-base"
           >
             すべて
@@ -81,7 +107,7 @@ export default function FaqPage() {
               key={key}
               variant={selectedCategory === key ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setSelectedCategory(key as FaqCategory)}
+              onClick={() => handleCategoryFilter(key as FaqCategory)}
               className="text-base"
             >
               <span className="mr-1">{emoji}</span>
@@ -108,7 +134,19 @@ export default function FaqPage() {
             </div>
 
             {/* FAQ Accordion */}
-            <Accordion type="single" collapsible className="space-y-4">
+            <Accordion
+              type="single"
+              collapsible
+              className="space-y-4"
+              onValueChange={(value) => {
+                if (value) {
+                  const faq = filteredFaqs.find((f) => f.id === value);
+                  if (faq) {
+                    trackFaqItemExpanded(faq.id, faq.question);
+                  }
+                }
+              }}
+            >
               {filteredFaqs.map((faq) => (
                 <AccordionItem
                   key={faq.id}
