@@ -347,6 +347,63 @@ Alpha リリース後の3ヶ月間（2026年3月～6月）の詳細な実装計�
 
 ---
 
+## 2026-02-15: Phase 6.1 パフォーマンス最適化（開始）
+
+### 実装内容
+**Commits:** `83b77b4`, `01f1f5c`
+
+#### 目的
+Alpha リリース前にパフォーマンスを最適化し、Lighthouse スコア 95+、LCP < 1.2秒、First Load JS < 70 KB を達成する。
+
+#### 実装項目
+
+**Phase 6.1.3: JavaScript バンドル最適化**（完了）
+- **Commit:** `83b77b4` - perf: implement dynamic imports for bundle optimization
+
+1. **動的インポート実装**
+   - `AdvancedSettingsPage` を動的ロード（SSR無効）
+   - Post-Download Guide 4コンポーネントを動的ロード
+   - `GpuSelectorModal` を動的ロード
+   - Loading skeleton UX 追加
+
+2. **Next.js 15 最適化**
+   - viewport/themeColor を metadata から分離
+   - `Noto Sans JP` に `preload: true` 追加
+   - metadataBase 設定追加（OGP画像用）
+
+**Phase 6.1.4: キャッシュ戦略最適化**（完了）
+- **Commit:** `01f1f5c` - perf: optimize cache strategy
+
+1. **vercel.json ヘッダー最適化**
+   - 静的アセット（`/_next/static`）: `max-age=31536000, immutable`
+   - 画像・フォント: `max-age=31536000, immutable`
+   - API routes: `s-maxage=60, stale-while-revalidate=300`
+
+2. **API revalidate 設定**
+   - `/api/gpu/list`: `revalidate = 3600`（1時間キャッシュ）
+
+#### テスト結果
+- ✅ ビルド成功（全2回）
+- ✅ TypeScript エラー 0件
+- ✅ **First Load JS: 78.2 KB → 56.3 KB（-21.9 KB、-28%削減）**
+- ✅ **目標（< 70 KB）を大幅に達成**
+- ✅ `/api/gpu/list` に Revalidate 1h 表示確認
+
+#### 成果
+- **パフォーマンス大幅改善:** 初期ロード削減により、ユーザー体験が向上
+- **動的ロード:** 必要なコンポーネントのみを必要時にロード
+- **キャッシュ効率化:** 静的アセットの長期キャッシュ、APIの適切なキャッシュ
+
+#### 既知の制限事項
+なし
+
+#### 次のタスクへの影響
+- Phase 6.1.5: Lighthouse CI 導入（次のセッション）
+- Phase 6.1.6: Vercel Analytics 導入（次のセッション）
+- Phase 6.2: ビジュアル強化（OBSスクリーンショット）へ進む準備完了
+
+---
+
 ## テンプレート（次回実装時に使用）
 
 ### YYYY-MM-DD: [タスク名]（Task #X）
