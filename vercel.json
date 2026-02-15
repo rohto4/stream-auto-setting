@@ -7,7 +7,7 @@
   "regions": ["hnd1"],
   "headers": [
     {
-      "source": "/public/:path*",
+      "source": "/_next/static/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -16,11 +16,20 @@
       ]
     },
     {
-      "source": "/api/:path*",
+      "source": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp|avif|woff|woff2|ttf|otf))",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=60, stale-while-revalidate=300"
         }
       ]
     }
