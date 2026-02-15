@@ -2,9 +2,7 @@
 G:\devwork\stream-auto-setting\docs\tech-stack.md
 
 次の配下のドキュメントを全て考慮に入れて設計します。
-G:\devwork\stream-auto-setting\docs\default
-G:\devwork\stream-auto-setting\docs\lv1
-G:\devwork\stream-auto-setting\docs\lv2
+G:\devwork\stream-auto-setting\docs\配下
 
 ## 価値観
 ・このプロジェクトでは、アクセスしたユーザを手放さないことを最重要視します。
@@ -25,6 +23,8 @@ TASK-001:実装を進めてください」は次の4行のタスクの事を示�
  テストを実施する　⇔　修正する（品質が一定以上になるまでループ）
  実装による設計書の更新を実施する
  実装レポートimp-report.mdを追記する
+TASK-002:私に確認をすることのみが任務だとしたら、それはおすすめの実施方法で進めて問題ないです。
+フェイズが一区切りだからと言って、基本的には応答待ちにしないでください。（進めてください）
 
 ## 推奨開発フロー
 
